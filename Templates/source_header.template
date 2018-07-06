@@ -1,0 +1,17 @@
+/**
+ * @file file_path/filename
+ * @brief 
+ * @description 
+ * @author Full Name <contact@mail.me>
+ * @copyright 
+ */
+
+#ifndef _FILENAME_DEVICE_PROJECT_YEAR_
+
+
+#endif  //_FILENAME_DEVICE_PROJECT_YEAR
+
+
+namespace local_namespace {
+
+}
