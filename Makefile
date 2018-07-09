@@ -1,7 +1,10 @@
 # Set some paths for the tools.
+
 SRC_DIR = src/
-TOOL_PATH = /srv/share/Workspace/ARM/resources/gnu-mcu-eclipse/arm-none-eabi-gcc/7.2.1-1.1-20180401-0515/bin
+#TOOL_PATH = /opt/gnu-mcu-eclipse/arm-none-eabi-gcc/7.2.1-1.1-20180401-0515/bin/
+TOOL_PATH = /opt/gcc-arm-none-eabi-7-2018-q2-update/bin/
 FLASH_PATH = /srv/share/Workspace/ARM/resources/edbg
+
 # We are compiling for SAM4S CortexM4
 ARCH = cortex-m4
 
@@ -89,6 +92,3 @@ clean:
 
 #size:
 #arm-none-eabi-size ex0.elf
-
-
-
