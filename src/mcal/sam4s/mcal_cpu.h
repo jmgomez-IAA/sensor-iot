@@ -8,6 +8,16 @@
  */
 
 #ifndef _MCAL_CPU_SAM4S_EMBEDDED_2018_
+#define _MCAL_CPU_SAM4S_EMBEDDED_2018_
 
+
+namespace mcal
+{
+  namespace cpu
+  {
+    typedef void config_type;
+    void init(const config_type*);
+  }
+}
 
 #endif  //_MCAL_CPU_SAM4S_EMBEDDED_2018

@@ -10,6 +10,7 @@
 #ifndef _MCAL_EMBEDDED_2018_
 #define _MCAL_EMBEDDED_2018_
 
+#include <mcal_cpu.h>
 #include <mcal_irq.h>
 #include <mcal_led.h>
 
