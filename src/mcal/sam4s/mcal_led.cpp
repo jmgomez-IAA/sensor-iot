@@ -7,13 +7,16 @@
  * @copyright
  */
 
-
 #include <mcal_led.h>
+#include <mcal_reg_access.h>
+
 
 namespace mcal
 {
   namespace led
   {
-    const led_type led_yellow;
+
+    const led led_yellow(mcal::reg::portc, 0x800000U);
+
   }
 }

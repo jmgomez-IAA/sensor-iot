@@ -19,6 +19,6 @@ int main()
   //Wait forever.
   for(;;)
     {
-      mcal::cpu::nop();
+      //      mcal::cpu::nop();
     }
 }

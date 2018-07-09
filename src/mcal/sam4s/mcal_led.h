@@ -10,48 +10,48 @@
 #ifndef _MCAL_LED_SAM4S_EMBEDDED_2018_
 #define _MCAL_LED_SAM4S_EMBEDDED_2018_
 
+#include <cstdint>
+
 namespace mcal
 {
   namespace led
   {
 
-    template<typename addr_type,
-             typename reg_type,
-             const addr_type port,
-             const reg_type bpos>
     class led
     {
     public:
-      typedef std::uint8_t port_type;
-      typedef std::uint8_t bval_type;
-      led()
-      {
-        //Set the pin value low.
-        port_pin_type::set_pin_low();
+      //Conf registers and address are 32bit.
+      typedef std::uint32_t port_type;
+      typedef std::uint32_t bval_type;
 
-        //Set the pin direction out
-        port_pin_type::set_direction_output();
+      /**
+       * @brief bval es el valor de pin a poner a 1,, bval=2 => pin 1 del puerto.
+       **/
+      led(const port_type p,
+          const bval_type b) : port(p),
+                               bval(b)
+      {
+        //Enable the port pin to manage with PIO (pio_per).
+        *reinterpret_cast<volatile bval_type*>(port)  |= static_cast<bval_type>(bval);
+        // Set the port pin to low.
+        *reinterpret_cast<volatile bval_type*>(port+ 0x34U) |= static_cast<bval_type>(bval);
+
+        // Set the port pin to output.
+        *reinterpret_cast<volatile bval_type*>(port + 0x10U) |= bval;
       }
 
-      toggle()
+      void toggle(void) const
       {
-        port_pin_type::toggle_pin();
+        // Toggle the LED.
+        *reinterpret_cast<volatile bval_type*>(port+0x30U) |= bval;
       }
 
     private:
-      typedef mcal::port::port_pin<addr_type,
-                                   reg_type,
-                                   port,
-                                   bpos> port_pin_type;
+      const port_type port;
+      const bval_type bval;
     };
 
-    //The led is in the PIO Controller C, at pin 4.
-  typedef led<std::uint32_t,
-              std::uint32_t,
-              mcal::reg::portc,
-              0x4> led_type;
-
-  extern const led_type led_yellow;
+    extern const led led_yellow;
 
   }
 

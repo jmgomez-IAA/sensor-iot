@@ -15,8 +15,6 @@
   {
     namespace reg
     {
-      // ARduino I/O register offset
-      constexpr std::uint8_t sfr_offset = 0x20U;
 
       // Bit-position values.
       constexpr std::uint8_t bval0  = 1U;
@@ -37,11 +35,11 @@
 
       //Parallel Input/Output Controller (PIO)
 
-      constexpr std::uint32_t offset_pio_porta = 0x400E0E00U;
-      constexpr std::uint32_t offset_pio_portb = 0x400E1000U;
-      constexpr std::uint32_t offset_pio_portc = 0x400E1200U;
+      constexpr std::uint32_t porta = 0x400E0E00U;
+      constexpr std::uint32_t portb = 0x400E1000U;
+      constexpr std::uint32_t portc = 0x400E1200U;
 
-      constexpr std::uint32_t sfr_offset = sfr_offset_PIOA;
+      constexpr std::uint32_t sfr_offset = 0;
 
       constexpr std::uint32_t pio_per = 0x0000U + sfr_offset;
       constexpr std::uint32_t pio_pdr = 0x0004U + sfr_offset;
