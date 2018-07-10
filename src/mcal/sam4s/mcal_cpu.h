@@ -20,4 +20,5 @@ namespace mcal
   }
 }
 
+
 #endif  //_MCAL_CPU_SAM4S_EMBEDDED_2018

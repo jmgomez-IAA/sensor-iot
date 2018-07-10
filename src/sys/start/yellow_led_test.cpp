@@ -8,17 +8,28 @@
 
 #include <mcal/mcal.h>
 
+
+extern "C"
+void interruptHandler()
+{
+
+}
+
+extern "C"
+void exit()
+{
+  while (true) {}
+}
+
+
 int main()
 {
 
   mcal::init();
 
   //Toggle LED.
-  led_yellow.toggle();
+  mcal::led::led_yellow.toggle();
 
   //Wait forever.
-  for(;;)
-    {
-      //      mcal::cpu::nop();
-    }
+  return 0;
 }

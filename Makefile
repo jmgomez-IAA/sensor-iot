@@ -20,47 +20,45 @@ FLASH = ${FLASH_PATH}/edbg
 # Compiler flags
 INCLUDES = src/
 LIBS = src/
-CPPFLAGS = -mmcu=${ARCH} -O2 
+CPPFLAGS = -mcpu=${ARCH} -g -O2 -Wall -Wextra -pedantic -fsigned-char -fno-exceptions
 CXXFLAGS = -std=c++11
+CINCLUDES = -Isrc -Isrc/mcal/sam4s
 LDFLAGS = 
 
+
+
 # Here is a simple Make Macro.
-LINK_TARGET = bin/ex0.elf
-HEX = bin/ex0.hex
-BIN = bin/ex0.bin
+LINK_TARGET = bin/led_test.elf
+HEX = bin/yellow_test.hex
+BIN = bin/yellow_test.bin
 
 # Here is a Make Macro that uses the backslash to extend to multiple lines.
-OBJS =  \
- bin/ex0.o \
+SOURCES = src/mcal/mcal.cpp src/mcal/sam4s/mcal_led.cpp src/sys/start/yellow_led_test.cpp
+OBJECTS = bin/mcal.o bin/mcal_led.o bin/yellow_led_test.o
 
-.PHONY = all $(HEX) $(BIN)
+.PHONY = all
 
-all:  $(LINK_TARGET) 
+all: bin/led_test.elf
 	echo "All done..."
 
-# Here is a Rule that uses some built-in Make Macros in its command:
-# $@ expands to the rule's target, in this case "test_me.exe".
-# $^ expands to the rule's dependencies, in this case the three files
-# main.o, test1.o, and  test2.o.
-$(LINK_TARGET) : ${OBJS}
+bin/mcal.o : src/mcal/mcal.cpp
+	echo "Compile the mcal.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o bin/mcal.o -c src/mcal/mcal.cpp
+
+bin/mcal_led.o : src/mcal/sam4s/mcal_led.cpp
+	echo "Compile the mcal_led.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
+
+bin/yellow_led_test.o :  src/sys/start/yellow_led_test.cpp
+	echo "Compile the mcal_led.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
+
+
+bin/led_test.elf : $(OBJECTS)
 	echo "Link sources..."
 	${LD} -g $^ -o $@
 	${SIZE} $@
 	${OBJDUMP} -D -S $@ > $@.list
-
-#link without std_lib:
-#arm-none-eabi-g++ -mmcu=cortex-m4 -nostartfiles -nostdlib -Wl,-Tavr.ld,-Map,bin/led.map bin/led.o bin/crt0.o -o bin/led.elf
-
-# Compile de .cpp file to .o
-# $@ for the pattern-matched target
-# $< for the pattern-matched dependency
-%.o : %.cpp
-	echo "Compile sources..."
-	${CXX} -g -o $@ -c $<
-
-bin/ex0.o : src/sys/start/ex0.cpp
-	echo "Specific target compilation."
-	${CXX} -g -o $@ -c $<
 
 $(HEX) : $(LINK_TARGET)
 	${OBJCOPY} -O ihex $^ $@.hex
@@ -73,7 +71,7 @@ flash:
 	${EDBG} -bpv -t atmel_cm4 -f bin/ex0.bin
 
 clean: 
-	rm -f $(TARGET) $(OBJS)
+	rm -f $(TARGET) $(OBJECTS)
 	echo "Clean ... "
 
 #ctr0:

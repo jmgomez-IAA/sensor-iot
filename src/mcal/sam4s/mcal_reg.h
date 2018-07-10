@@ -28,10 +28,10 @@
 
       // Peripheral Memory Map Registers
       //Sys Timer.
-      constexpr std::uint8_t syst_csr   = 0xE000E010;
-      constexpr std::uint8_t syst_rvr   = 0xE000E014;
-      constexpr std::uint8_t syst_cvr   = 0xE000E018;
-      constexpr std::uint8_t syst_calib = 0xE000E01C;
+      constexpr std::uint32_t syst_csr   = 0xE000E010U;
+      constexpr std::uint32_t syst_rvr   = 0xE000E014U;
+      constexpr std::uint32_t syst_cvr   = 0xE000E018U;
+      constexpr std::uint32_t syst_calib = 0xE000E01CU;
 
       //Parallel Input/Output Controller (PIO)
 
@@ -109,12 +109,12 @@
       constexpr std::uint32_t pio_fellsr = 0x00D0U + sfr_offset;
       constexpr std::uint32_t pio_rehlsr = 0x00D4U + sfr_offset;
       constexpr std::uint32_t pio_frlhsr = 0x00D8U + sfr_offset;
-      constexpr std::uint32_t pio_reserved = 0x00DCU + sfr_offset;
+      constexpr std::uint32_t pio_reserved12 = 0x00DCU + sfr_offset;
 
       constexpr std::uint32_t pio_locksr = 0x00E0U + sfr_offset;
       constexpr std::uint32_t pio_wpmr = 0x00E4U + sfr_offset;
       constexpr std::uint32_t pio_wpsr = 0x00E8U + sfr_offset;
-      constexpr std::uint32_t pio_reserved = 0x00ECU + sfr_offset;
+      constexpr std::uint32_t pio_reserved13 = 0x00ECU + sfr_offset;
 
       constexpr std::uint32_t pio_schmitt = 0x0100U + sfr_offset;
 

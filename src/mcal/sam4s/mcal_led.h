@@ -16,6 +16,8 @@ namespace mcal
 {
   namespace led
   {
+    typedef void config_type;
+    void init(config_type*);
 
     class led
     {
