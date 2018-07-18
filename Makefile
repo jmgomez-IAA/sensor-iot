@@ -3,7 +3,7 @@
 SRC_DIR = src/
 #TOOL_PATH = /opt/gnu-mcu-eclipse/arm-none-eabi-gcc/7.2.1-1.1-20180401-0515/bin/
 TOOL_PATH = /opt/gcc-arm-none-eabi-7-2018-q2-update/bin/
-FLASH_PATH = /srv/share/Workspace/ARM/resources/edbg
+FLASH_PATH = /opt/edbg
 
 # We are compiling for SAM4S CortexM4
 ARCH = cortex-m4
@@ -28,9 +28,9 @@ LDFLAGS =
 
 
 # Here is a simple Make Macro.
-LINK_TARGET = bin/led_test.elf
-HEX = bin/yellow_test.hex
-BIN = bin/yellow_test.bin
+LINK_TARGET = bin/yellow_led.elf
+HEX = bin/yellow_led.hex
+BIN = bin/yellow_led.bin
 
 # Here is a Make Macro that uses the backslash to extend to multiple lines.
 SOURCES = src/mcal/mcal.cpp src/mcal/sam4s/mcal_led.cpp src/sys/start/yellow_led_test.cpp
@@ -38,7 +38,7 @@ OBJECTS = bin/mcal.o bin/mcal_led.o bin/yellow_led_test.o
 
 .PHONY = all
 
-all: bin/led_test.elf
+all: bin/yellow_led.elf
 	echo "All done..."
 
 bin/mcal.o : src/mcal/mcal.cpp
@@ -49,12 +49,12 @@ bin/mcal_led.o : src/mcal/sam4s/mcal_led.cpp
 	echo "Compile the mcal_led.cpp"
 	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
 
-bin/yellow_led_test.o :  src/sys/start/yellow_led_test.cpp
+bin/yellow_led_test.o :  src/sys/app/yellow_led_test.cpp
 	echo "Compile the mcal_led.cpp"
 	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
 
 
-bin/led_test.elf : $(OBJECTS)
+bin/yellow_led.elf : $(OBJECTS)
 	echo "Link sources..."
 	${LD} -g $^ -o $@
 	${SIZE} $@
@@ -64,14 +64,14 @@ $(HEX) : $(LINK_TARGET)
 	${OBJCOPY} -O ihex $^ $@.hex
 
 $(BIN) : $(LINK_TARGET)
-	${OBJCOPY} -O binary $^ $@..bin
+	${OBJCOPY} -O binary $^ $@.bin
 
 # Upload the program to the memory of the device..
 flash:
-	${EDBG} -bpv -t atmel_cm4 -f bin/ex0.bin
+	${FLASH} -bpv -t atmel_cm4 -f bin/yellow_led.bin.bin
 
 clean: 
-	rm -f $(TARGET) $(OBJECTS)
+	rm -f $(LINK_TARGET) $(OBJECTS)
 	echo "Clean ... "
 
 #ctr0:

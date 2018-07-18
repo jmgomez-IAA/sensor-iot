@@ -36,7 +36,7 @@ namespace mcal
         //Enable the port pin to manage with PIO (pio_per).
         *reinterpret_cast<volatile bval_type*>(port)  |= static_cast<bval_type>(bval);
         // Set the port pin to low.
-        *reinterpret_cast<volatile bval_type*>(port+ 0x34U) |= static_cast<bval_type>(bval);
+        //*reinterpret_cast<volatile bval_type*>(port+ 0x34U) |= static_cast<bval_type>(bval);
 
         // Set the port pin to output.
         *reinterpret_cast<volatile bval_type*>(port + 0x10U) |= bval;
@@ -44,8 +44,12 @@ namespace mcal
 
       void toggle(void) const
       {
+
+        // Set the port pin to low.
+        *reinterpret_cast<volatile bval_type*>(port+ 0x34U) |= static_cast<bval_type>(bval);
+
         // Toggle the LED.
-        *reinterpret_cast<volatile bval_type*>(port+0x30U) |= bval;
+        //*reinterpret_cast<volatile bval_type*>(port+0x30U) |= bval;
       }
 
     private:
