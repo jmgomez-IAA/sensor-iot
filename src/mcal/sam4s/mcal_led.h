@@ -33,6 +33,9 @@ namespace mcal
           const bval_type b) : port(p),
                                bval(b)
       {
+
+        *reinterpret_cast<volatile bval_type*>(0x400E0410) |= static_cast<bval_type>(1<<13);
+
         //Enable the port pin to manage with PIO (pio_per).
         *reinterpret_cast<volatile bval_type*>(port)  |= static_cast<bval_type>(bval);
         // Set the port pin to low.

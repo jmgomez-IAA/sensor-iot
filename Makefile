@@ -22,8 +22,8 @@ INCLUDES = src/
 LIBS = src/
 CPPFLAGS = -mcpu=${ARCH} -g -O2 -Wall -Wextra -pedantic -fsigned-char -fno-exceptions
 CXXFLAGS = -std=c++11
-CINCLUDES = -Isrc -Isrc/mcal/sam4s
-LDFLAGS = 
+CINCLUDES = -Isrc -Isrc/mcal/sam4s -Isrc/util/STL -Isrc/sys/start/sam4s
+LDFLAGS =  -mthumb -Wl,-Map="yellow_led.map" -Wl,--start-group -lm  -Wl,--end-group -L"./src/sys/start/sam4s"  -Wl,--gc-sections  -Tatsam4sd32c.ld
 
 
 
@@ -33,17 +33,44 @@ HEX = bin/yellow_led.hex
 BIN = bin/yellow_led.bin
 
 # Here is a Make Macro that uses the backslash to extend to multiple lines.
-SOURCES = src/mcal/mcal.cpp src/mcal/sam4s/mcal_led.cpp src/sys/start/yellow_led_test.cpp
-OBJECTS = bin/mcal.o bin/mcal_led.o bin/yellow_led_test.o
+SOURCES = src/sys/start/sam4s/crt0.cpp src/sys/start/sam4s/crt0_init_ram.cpp src/sys/start/sam4s/crt1.cpp src/sys/start/sam4s/int_vect.cpp src/mcal/mcal.cpp src/mcal/sam4s/mcal_cpu.cpp src/mcal/sam4s/mcal_led.cpp src/sys/start/yellow_led_test.cpp
+OBJECTS = bin/crt0.o bin/crt0_init_ram.o bin/crt1.o bin/int_vect.o bin/mcal.o bin/mcal_cpu.o bin/mcal_led.o bin/yellow_led_test.o
 
 .PHONY = all
 
 all: bin/yellow_led.elf
 	echo "All done..."
 
+bin/yellow_led.elf : $(OBJECTS)
+	echo "Link sources..."
+	${LD} -g $^ -o $@ $(LDFLAGS)
+	${SIZE} $@
+	${OBJDUMP} -D -S $@ > $@.list
+
+
+bin/crt0.o : src/sys/start/sam4s/crt0.cpp
+	echo "Compile the crt0.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o bin/crt0.o -c src/sys/start/sam4s/crt0.cpp
+
+bin/crt0_init_ram.o : src/sys/start/sam4s/crt0_init_ram.cpp
+	echo "Compile the crt0_init_ram.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o bin/crt0_init_ram.o -c src/sys/start/sam4s/crt0_init_ram.cpp
+
+bin/crt1.o : src/sys/start/sam4s/crt1.cpp
+	echo "Compile the crt1.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o bin/crt1.o -c src/sys/start/sam4s/crt1.cpp
+
+bin/int_vect.o : src/sys/start/sam4s/int_vect.cpp
+	echo "Compile the int_vect.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o bin/int_vect.o -c src/sys/start/sam4s/int_vect.cpp
+
 bin/mcal.o : src/mcal/mcal.cpp
 	echo "Compile the mcal.cpp"
 	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o bin/mcal.o -c src/mcal/mcal.cpp
+
+bin/mcal_cpu.o : src/mcal/sam4s/mcal_cpu.cpp
+	echo "Compile the mcal_cpu.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
 
 bin/mcal_led.o : src/mcal/sam4s/mcal_led.cpp
 	echo "Compile the mcal_led.cpp"
@@ -53,17 +80,10 @@ bin/yellow_led_test.o :  src/sys/app/yellow_led_test.cpp
 	echo "Compile the mcal_led.cpp"
 	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
 
-
-bin/yellow_led.elf : $(OBJECTS)
-	echo "Link sources..."
-	${LD} -g $^ -o $@
-	${SIZE} $@
-	${OBJDUMP} -D -S $@ > $@.list
-
 $(HEX) : $(LINK_TARGET)
 	${OBJCOPY} -O ihex $^ $@.hex
 
-$(BIN) : $(LINK_TARGET)
+binary : $(LINK_TARGET)
 	${OBJCOPY} -O binary $^ $@.bin
 
 # Upload the program to the memory of the device..

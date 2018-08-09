@@ -11,7 +11,7 @@
 
 void mcal::init()
 {
-  mcal::cpu::init(nullptr);
+  mcal::cpu::init();
   //mcal::irq::init(nullptr);
   //mcal::led::init(nullptr);
 }

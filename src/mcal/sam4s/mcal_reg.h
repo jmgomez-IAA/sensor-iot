@@ -32,6 +32,9 @@
       // System Control Space
       constexpr std::uint32_t scs_base        = UINT32_C(0xE000E000);
 
+      constexpr std::uint32_t apb1periph_base = periph_base     + UINT32_C(0x00000000);
+      constexpr std::uint32_t ahb1periph_base = periph_base     + UINT32_C(0x00020000);
+
       // Individual unit base addresses.
       // ==
       // System Control Block
@@ -41,19 +44,22 @@
       // Nested Vector Interrupt Controller
       constexpr std::uint32_t nvic_base       = scs_base        + UINT32_C(0x00000100);
       constexpr std::uint32_t nvic2_base      = scs_base        + UINT32_C(0x00000F00);
-      constexpr std::uint32_t apb1periph_base = periph_base     + UINT32_C(0x00000000);
+
+      // Power Management Controller
+      constexpr std::uint32_t pmc_base        = periph_base     + UINT32_C(0x000E0400);
+
+      constexpr std::uint32_t rcc_base        = ahb1periph_base + UINT32_C(0x00003800);
       constexpr std::uint32_t pwr_base        = apb1periph_base + UINT32_C(0x00007000);
-      constexpr std::uint32_t ahb1periph_base = periph_base     + UINT32_C(0x00020000);
+
+      // Watchdog Control(* reg_wdt_mr) |=  WDT_WDDIS;
+      constexpr std::uint32_t wdt_base        = periph_base     + UINT32_C(0x000E1450);
 
       // Parallel Input/Output Controller
       constexpr std::uint32_t pioa_base       = scs_base        + UINT32_C(0x0E00);
       constexpr std::uint32_t piob_base       = scs_base        + UINT32_C(0x1000);
       constexpr std::uint32_t pioc_base       = scs_base        + UINT32_C(0x2000);
 
-
-      constexpr std::uint32_t rcc_base        = ahb1periph_base + UINT32_C(0x00003800);
       constexpr std::uint32_t flash_r_base    = ahb1periph_base + UINT32_C(0x00003C00);
-
 
       // Peripheral Memory Map Registers
       //Sys Timer.
@@ -62,28 +68,14 @@
       constexpr std::uint32_t syst_cvr   = 0xE000E018U;
       constexpr std::uint32_t syst_calib = 0xE000E01CU;
 
-      //Parallel Input/Output Controller (PIO)
-      constexpr std::uint32_t pioa_base = 0x0U;
-      constexpr std::uint32_t piob_base = 0x0U;
-      constexpr std::uint32_t pioc_base = 0x0U;
-
-      // Power Controller Registers
-      constexpr std::uint32_t pwr_base = 0x0;
       // Port Registers
       constexpr std::uint32_t gpio_base = 0x0;
 
       // Timer Registers
       constexpr std::uint32_t tim4_base = 0x0;
 
-      // Power Management Registers
-      constexpr std::uint32_t rcc_base = 0x0;
-
       // Watchdog Controller Registers
       constexpr std::uint32_t iwdg_ase = 0x0;
-
-      // Interrupt Controller Registers
-      // Nested interrupt vector controller
-      constexpr std::uint32_t nvic_base =  0x0;
 
     }
   }

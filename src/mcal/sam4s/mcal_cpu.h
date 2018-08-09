@@ -18,7 +18,8 @@ namespace mcal
   {
 
     typedef void config_type;
-    void init(const config_type*);
+
+    void init();
 
     inline void post_init() {}
     inline void nop() { asm volatile("nop"); }

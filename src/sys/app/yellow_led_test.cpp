@@ -9,26 +9,13 @@
 #include <mcal/mcal.h>
 
 
-extern "C"
-void interruptHandler()
-{
-
-}
-
-extern "C"
-void exit()
-{
-  while (true) {}
-}
-
-
 int main()
 {
 
   mcal::init();
 
   //Toggle LED.
-  // mcal::led::led_yellow.toggle();
+   mcal::led::led_yellow.toggle();
 
   //Wait forever.
   return 0;

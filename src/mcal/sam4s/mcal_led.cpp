@@ -16,7 +16,7 @@ namespace mcal
   namespace led
   {
 
-    const led led_yellow(mcal::reg::portc, 0x800000U);
+    const led led_yellow(mcal::reg::pioc_base, 0x800000U);
 
   }
 }

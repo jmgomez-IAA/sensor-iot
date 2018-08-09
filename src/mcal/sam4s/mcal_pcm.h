@@ -7,18 +7,19 @@
  * @copyright 
  */
 
-#ifndef _MCAL_CPU_SAM4S_EMBEDDED_2018_
-#define _MCAL_CPU_SAM4S_EMBEDDED_2018_
+#ifndef _MCAL_PCM_SAM4S_EMBEDDED_2018_
+#define _MCAL_PCM_SAM4S_EMBEDDED_2018_
+
 
 namespace mcal
 {
-  namespace cpu
+  namespace pcm
   {
     typedef void config_type;
     void init(const config_type*);
-    inline nop() {asm("nop"};
+
   }
 }
 
 
-#endif  //_MCAL_CPU_SAM4S_EMBEDDED_2018
+#endif  //_MCAL_PCM_SAM4S_EMBEDDED_2018
