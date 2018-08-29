@@ -69,6 +69,10 @@ $(OUTPUT_DIR)/test_stl_vector.elf :  src/app/test_stl_vector.cpp
 	${CXX} $(CXXFLAGS) -Isrc -o build/test_stl_vector.o -c src/app/test_stl_vector.cpp
 	${CXX} $(CXXFLAGS) -Isrc  build/test_stl_vector.o -o build/test_stl_vector
 
+communication_base :  src/app/test_communication_base.cpp
+	${CXX} $(CXXFLAGS) -Isrc -Isrc/comm -Isrc/my_util -o build/buffer_communication.o -c src/comm/buffer_communication.cpp
+	${CXX} $(CXXFLAGS) -Isrc -Isrc/comm -Isrc/my_util -o build/test_communication_base.o -c src/app/test_communication_base.cpp
+	${CXX} $(CXXFLAGS) -Isrc  build/buffer_communication.o build/test_communication_base.o -o build/test_communication_base
 
 clean: 
 	rm -f $(LINK_TARGET) $(OBJECTS)
