@@ -6,8 +6,8 @@
  * @copyright Juan Manuel Gomez 2018 - Distribruted under Boost
  */
 
-#ifndef _COMM_MOD_2018_08_16_H_
-#define _COMM_MODBUS_2018_08_16_H_
+#ifndef _COMM_BGS2_2018_08_16_H_
+#define _COMM_BGS2_2018_08_16_H_
 
 
 #include <iostream>
@@ -30,9 +30,9 @@ namespace comm
       //      using Base = Message<TReadIter,TWriteIter>;
       //using ReadIterator = Base::ReadIterator;
       //using WriteIterator = Base::WriteIterator;
-      enum MODBUS_Function_Codes : std::uint8_t 
+      enum AT_COMMANDS : std::uint8_t 
       {
-        not_supported_function = 0x00,
+        not_supported_function = static_cast,
             read_coils  = 0x01, 
             read_discrete_inputs  = 0x02,
             read_holding_registers  = 0x03, 
@@ -136,4 +136,4 @@ namespace comm
   }
 }
 
-#endif //__COMM_MSG_2018_06_16_H_
+#endif //__COMM_BGS2_2018_06_16_H_
