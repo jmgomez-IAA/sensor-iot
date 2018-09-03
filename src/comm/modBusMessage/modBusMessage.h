@@ -124,7 +124,7 @@ namespace comm
       //The data in the message is Temperatura, Humidity and Others
       std::uint32_t additional_addr;
       array<std::uint8_t,253> rs485_adu;
-      std::uint32_t error_check
+      std::uint32_t crc;
 
       
       virtual comm::ErrorStatus create_mb_req_pdu(MODBUS_Function_Codes function_code, array<std::uint8_t>request_data);

@@ -10,6 +10,8 @@
 //#include <iostream>
 #include <cstdint>
 #include <vector>
+#include <iterator>
+#include <algorithm>
 
 #include <util_communication.h>
 
@@ -25,16 +27,21 @@ namespace util
       {
        public:
         typedef std::vector<std::uint8_t> buffer_type;
+        typedef std::size_t size_type;
         
         buffer_communication() : send_is_active(false) {}
 
         virtual bool send(const std::uint8_t byte_to_send);
-        //template<typename send_iterator_type>
-        // bool send_n(send_iterator_type first, send_iterator_type last);
+        
+        template<typename send_iterator_type>
+        bool send_n(send_iterator_type first, send_iterator_type last);
 
         virtual std::size_t recv_ready() const;
         virtual bool recv(std::uint8_t &byte_to_recv);
-        //bool recv_n(recv_iterator_type first,size_type count)
+
+        template<typename recv_iterator_type>
+        bool recv_n(recv_iterator_type first,size_type count);
+
         void simulate_recv();
 
        private:

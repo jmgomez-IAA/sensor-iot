@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <vector>
+#include <array>
 
 #include <buffer_communication.h>
 
@@ -20,10 +21,19 @@
 //buffer_communication my_buff_comm;
 //extern util::comm::buffer_communication util::comm::my_buff_comm;
 
+constexpr std::size_t buffer_max_size = 64;
+typedef std::array<uint8_t, buffer_max_size> buffer_type;
+
 int main()
 {
 
   std::uint8_t byte_to_send = 0, byte_to_recv = 0;
+  buffer_type transmit_buffer;
+  buffer_type receive_buffer;
+
+  std::cout << "Test 1: Single byte transmission." << std::endl;
+  std::cout << " ==============================  " << std::endl;
+
   for(int i = 0; i< 10; i ++)
   {
     byte_to_send = static_cast<uint8_t>(i);
@@ -50,5 +60,28 @@ int main()
     }
   }
   std::cout << "Send buffer is empty." << std::endl;
+
+
+  std::cout << "Test 2: Multiple byte transmission." << std::endl;
+  std::cout << " ================================  " << std::endl;
   
+  std::uint8_t data_sample;
+  for(auto it = transmit_buffer.begin(); it != transmit_buffer.end() ; it ++)
+  {
+    byte_to_send = static_cast<uint8_t>(data_sample);
+    (*it) = data_sample;
+    data_sample ++;
+  }
+
+  util::comm::my_buff_comm.send_n<std::uint8_t>(byte_to_send);
+  //template<typename send_iterator_type>
+  bool transfer_result = util::comm::send_n(transmit_buffer.begin(), transmit_buffer.end() );
+  if (transfer_result)
+    std::cout << "All bytes were transfered successfully. " << std::endl;
+
+  util::comm::my_buff_comm.simulate_recv();
+
+  return 0;
+  
+
 }
