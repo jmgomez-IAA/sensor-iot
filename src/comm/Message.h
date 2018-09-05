@@ -40,7 +40,7 @@ namespace comm
     {
       msg.write(...);
     };
-*/
+    */
     template<typename TReadIter, typename TWriteIter>
     class Message
     {
@@ -67,7 +67,7 @@ namespace comm
        * @param len, is the len of the message.
        * @return Communication Status, ErrorStatus enum.        
        */
-      ErrorStatus write( WriteIterator& iter, std::size_t len) 
+      ErrorStatus write( WriteIterator iter, std::size_t len) 
       { 
 	return writeImpl(iter, len);
       }
@@ -85,7 +85,7 @@ namespace comm
 */
     protected:
       virtual ErrorStatus readImpl(ReadIterator& iter, std::size_t len)  = 0; 
-      virtual ErrorStatus writeImpl(WriteIterator& iter, std::size_t len) = 0;     
+      virtual ErrorStatus writeImpl(WriteIterator iter, std::size_t len) = 0;     
  
     };
 

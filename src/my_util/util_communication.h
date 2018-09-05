@@ -51,5 +51,3 @@ class communication
   const communication& operator=(const communication&) = delete;
 
 };
-
-

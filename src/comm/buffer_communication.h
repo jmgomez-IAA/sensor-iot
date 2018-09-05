@@ -2,6 +2,7 @@
  * @file buffer_communication.h
  * @brief Communication specialization for a vector buffer transmission.
  * @description Communication class definition for embedded system.
+ * Biblio: https://isocpp.org/wiki/faq/templates#templates-defn-vs-decl
  * @return 
  * @author jmgomez@iaa.es
  * @copyright Juan Manuel Gomez 2018 - Distribruted under Boost

@@ -15,9 +15,13 @@
 
 #include <buffer_communication.h>
 
-constexpr std::size_t buffer_max_size = 10;
+#include <Debug_message/Debug_message.h>
+
+constexpr std::size_t buffer_max_size = 64;
 typedef std::array<uint8_t, buffer_max_size> buffer_type;
 
+typedef comm::msg::Debug_message<std::uint8_t*, std::uint8_t*> log_type;
+typedef comm::msg::Message<std::uint8_t*, std::uint8_t*>* msg_type;
 
 int main()
 {
@@ -25,12 +29,17 @@ int main()
   buffer_type transmit_buffer;
   buffer_type receive_buffer;
 
+  log_type system_log;
+  //  msg_type msg_ptr = &system_log;
+
+  system_log.print();
 
   std::cout << "Test 2: Multiple byte transmission." << std::endl;
   std::cout << " ================================  " << std::endl;
   
   std::uint8_t data_sample;
   std::uint8_t byte_to_send = 0, byte_to_recv = 0;
+  /*
   for(auto it = transmit_buffer.begin(); it != transmit_buffer.end() ; it ++)
   {
     byte_to_send = static_cast<uint8_t>(data_sample);
@@ -38,6 +47,9 @@ int main()
     std::cout << "transmit_buffer.at( "<< static_cast<unsigned>(it - transmit_buffer.begin()) <<  ")= " << static_cast<unsigned>(data_sample) << std::endl;
     data_sample ++;
   }
+  */
+  system_log.writeImpl(transmit_buffer.begin(), static_cast< std::size_t>(10));
+
 
   for ( const auto& s: transmit_buffer)
     std::cout << static_cast<unsigned>(s) << ", " ; 

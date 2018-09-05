@@ -6,29 +6,67 @@ interface Message_base
 scheduler -- task
 task <|-- TimeCritical_task
 task <|-- ProcessMessage_task
-
-Communication_base -- Message_base
-
-Communication_base  <|--  Communication 
-Message_base  <|--  Message_ModBus
 Handler -- Message_base
-TimeCritical_task -- Communication
+
 ProcessMessage_task -- Message_base
 
+Message_base -- Communication_base
 
+Message_base  <|--  Message_ModBus
+Message_base  <|--  Message_Debug
+Message_base  <|--  Message_ATCommand
+
+Communication_base <|-- Buffer_Communication  
+Communication_base <|-- Uart_Communication  
+Communication_base <|-- I2C_Communication  
+Communication_base <|-- RS485_Communication  
+
+Message_base : transmit_buffer
+Message_base : receive_buffer
+Message_base : read
+Message_base : write
+
+Message_Debug :  read
+Message_Debug :  write
+Message_Debug :  readImpl
+Message_Debug :  writeImpl
+
+Communication_base : virtual send()
 Communication_base : send()
-Communication_base : sendn()
+Communication_base : send_n()
+Communication_base : virtual recv()
 Communication_base : recv()
-Communication_base : recvn()
+Communication_base : recv_n()
 Communication_base : Idle()
+
+Buffer_Communication : Init()
+Buffer_Communication : send() override
+Buffer_Communication : recv() override
+Buffer_Communication : Idle()
+
+Uart_Communication : Init()
+Uart_Communication : send() override
+Uart_Communication : recv() override
+Uart_Communication : Idle()
+
+RS485_Communication : Init()
+RS485_Communication : send() override
+RS485_Communication : recv() override
+RS485_Communication : Idle()
+
+I2C_Communication : Init()
+I2C_Communication : send() override
+I2C_Communication : recv() override
+I2C_Communication : Idle()
 
 Message_base : send()
 Message_base : recv()
 Message_base : Serialize()
 Message_ModBus : Dispatch()
+Message_Debug : Dispatch()
+Message_ATCommand : Dispatch()
 
-Communication : Array[] elementData
-Communication : Init()
+Message_base : Array[] elementData
 
 scheduler : shedule()
 task : exec()

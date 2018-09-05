@@ -75,8 +75,8 @@ communication_base :  src/app/test_communication_base.cpp
 	${CXX} $(CXXFLAGS) -Isrc  build/buffer_communication.o build/test_communication_base.o -o build/test_communication_base
 
 communication_base2 :  src/app/test_communication_base2.cpp
-	${CXX} $(CXXFLAGS) -Isrc -Isrc/comm -Isrc/my_util -o build/buffer_communication.o -c src/comm/buffer_communication.cpp
-	${CXX} $(CXXFLAGS) -Isrc -Isrc/comm -Isrc/my_util -o build/test_communication_base2.o -c src/app/test_communication_base2.cpp
+	${CXX} $(CXXFLAGS) -Isrc -Isrc/comm -Isrc/my_util -Isrc/my_util/utility -o build/buffer_communication.o -c src/comm/buffer_communication.cpp
+	${CXX} $(CXXFLAGS) -Isrc -Isrc/comm -Isrc/my_util -Isrc/my_util/utility -o build/test_communication_base2.o -c src/app/test_communication_base2.cpp
 	${CXX} $(CXXFLAGS) -Isrc  build/buffer_communication.o build/test_communication_base2.o -o build/test_communication_base2
 
 clean: 
