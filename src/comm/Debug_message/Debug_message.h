@@ -13,7 +13,6 @@
 #include <iostream>
 #include <assert.h>
 #include <array>
-#include <utility/util_auxiliar.h>
 
 #include "../Message.h"
 
@@ -55,6 +54,18 @@ class Debug_message : public Message<TReadIter, TWriteIter>
   virtual comm::ErrorStatus readImpl(ReadIterator &iter, std::size_t len)  override 
   {
 	
+    assert(0 < len < 64); // Message size is limited to 64 Bytes.
+   
+    ReadIterator last_element  = iter + len;
+
+    std::cout << std::endl;
+    while(iter != last_element)
+    {
+      std::cout << static_cast<unsigned>(*iter) << " ";
+      iter++;
+    }
+    std::cout << std::endl;
+    
     return comm::ErrorStatus::Success;
   };
 
@@ -66,7 +77,7 @@ class Debug_message : public Message<TReadIter, TWriteIter>
    * NOTA: Este read impl ya dispone de array para la transmissión, podemos emplearlo y envar al 
    * device solo los iteradores y emplear la funcion read_n(iter, iter).
    */      
-  virtual comm::ErrorStatus writeImpl(WriteIterator iter, std::size_t len) override 
+  virtual comm::ErrorStatus writeImpl(WriteIterator &iter, std::size_t len) override 
   {
     assert(0 < len < 64); // Message size is limited to 64 Bytes.
 
@@ -111,14 +122,22 @@ class Debug_message : public Message<TReadIter, TWriteIter>
     std::cout << std::endl;
   }
 
+  void printAll()
+  {
+    
+    util::aux::PRINT_ELEMENTS<buffer_type>(log_message);
+    /*
+      template <typename T>
+      friend inline void util::aux::PRINT_ELEMENTS (const T& coll,
+                                                    const std::string& optstr="");  
+    */
+
+  }
+
  private:
 
   buffer_type log_message;
-  /*
-    template <typename T>
-    friend inline void util::aux::PRINT_ELEMENTS (const T& coll,
-    const std::string& optstr="");  
-  */
+
 };
 
 }

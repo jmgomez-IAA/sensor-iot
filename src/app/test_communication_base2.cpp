@@ -30,9 +30,10 @@ int main()
   buffer_type receive_buffer;
 
   log_type system_log;
-  //  msg_type msg_ptr = &system_log;
+  msg_type msg_ptr = &system_log;
 
-  system_log.print();
+  //  system_log.print();
+  system_log.printAll();
 
   std::cout << "Test 2: Multiple byte transmission." << std::endl;
   std::cout << " ================================  " << std::endl;
@@ -48,16 +49,19 @@ int main()
     data_sample ++;
   }
   */
-  system_log.writeImpl(transmit_buffer.begin(), static_cast< std::size_t>(10));
 
+  buffer_type::iterator it_array = transmit_buffer.begin();
+  system_log.writeImpl( it_array, static_cast< std::size_t>(10));
+  //msg_ptr->writeImpl( transmit_buffer.begin()&, static_cast< std::size_t>(10));
 
+  /*
   for ( const auto& s: transmit_buffer)
     std::cout << static_cast<unsigned>(s) << ", " ; 
 
   std::cout << std::endl;
-
+  */
   //template<typename send_iterator_type>
-  bool transfer_result = util::comm::my_buff_comm.send_n(transmit_buffer.begin(), transmit_buffer.end() );
+  bool transfer_result = util::comm::my_buff_comm.send_n(transmit_buffer.begin(), (transmit_buffer.begin()+10) );
   if (transfer_result)
   {
     std::cout << "All bytes were transfered successfully. " << std::endl;
@@ -78,8 +82,11 @@ int main()
 
   if (recv_result)
   {
-    for ( const auto& r: receive_buffer)
-      std::cout << "Extract value: " << static_cast<unsigned>(r) << " from receive channel." << std::endl;
+    //    for ( const auto& r: receive_buffer)
+    //  std::cout << "Extract value: " << static_cast<unsigned>(r) << " from receive channel." << std::endl;
+    buffer_type::iterator first_iter = receive_buffer.begin();
+    system_log.readImpl( first_iter, received_elements);
+
   }
   else
   {

@@ -15,7 +15,9 @@
  */
 
 #ifndef _COMM_MSG_2018_06_16_H_
-#define _COMM_MSG_2018_06_16_H_
+#define _COMM_MSG_2018_06_16_
+
+#include <utility/util_auxiliar.h>
 
 namespace comm 
 {
@@ -67,7 +69,7 @@ namespace comm
        * @param len, is the len of the message.
        * @return Communication Status, ErrorStatus enum.        
        */
-      ErrorStatus write( WriteIterator iter, std::size_t len) 
+      ErrorStatus write( WriteIterator &iter, std::size_t len) 
       { 
 	return writeImpl(iter, len);
       }
@@ -85,8 +87,14 @@ namespace comm
 */
     protected:
       virtual ErrorStatus readImpl(ReadIterator& iter, std::size_t len)  = 0; 
-      virtual ErrorStatus writeImpl(WriteIterator iter, std::size_t len) = 0;     
+      virtual ErrorStatus writeImpl(WriteIterator& iter, std::size_t len) = 0;     
  
+  
+      template <typename T>
+      friend inline void util::aux::PRINT_ELEMENTS (const T& coll,
+                                                    const std::string& optstr="");  
+  
+
     };
 
   }
