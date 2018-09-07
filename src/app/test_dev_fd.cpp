@@ -12,10 +12,13 @@
 
 
 #include <iostream>
-#include <vector>
+#include <fstream>  // for file I/O
+#include <iomanip>  // for setw()
+#include <cstdlib>  //for exit()
 
-#include <buffer_communication.h>
+#include <string>
 
+#include <mcal/mcal.h>
 //#include <PipeMessage/PipeMessage.h>
 
 //buffer_communication my_buff_comm;
@@ -24,32 +27,23 @@
 int main()
 {
 
-  std::uint8_t byte_to_send = 0, byte_to_recv = 0;
-  for(int i = 0; i< 10; i ++)
-  {
-    byte_to_send = static_cast<uint8_t>(i);
 
-    util::comm::my_buff_comm.send(byte_to_send);
-    std::cout << "Add value: " << static_cast<unsigned>(byte_to_send) << " to transmit." << std::endl;
+std::ofstream file_out_desc( "out_dev_fd.bin" , (std::ios::out | std::ios::app | std::ios::ate | std::ios::binary ));
+  if (! file_out_desc )
+  {
+    std::cerr << "Can't open the output file " << "out_dev_fd.bin"  << " " << std::endl;
+    exit(EXIT_FAILURE);
   }
 
-  util::comm::my_buff_comm.simulate_recv();
-
-  std::size_t received_elements = 0;
-  while ( (received_elements = util::comm::my_buff_comm.recv_ready()) != 0 )
+std::ifstream file_in_desc ( "in_dev_fd.bin" , (std::ios::in | std::ios::app | std::ios::binary) );
+  if (! file_in_desc)
   {
-    
-    std::cout << "There are " << received_elements << " received." << std::endl;
+    std::cerr << "Can't open the input file " << "out_dev_fd.bin"  << " " << std::endl;
+    exit(EXIT_FAILURE);
+  }  
 
-    if (util::comm::my_buff_comm.recv(byte_to_recv) )
-    {
-      std::cout << "Extract value: " << static_cast<unsigned>(byte_to_recv) << " from circular buffer." << std::endl;
-    }
-    else
-    {
-      std::cout << "Error." << std::endl;
-    }
-  }
-  std::cout << "Send buffer is empty." << std::endl;
+
+  mcal::fd::file_descriptor_communication( file_out_desc, file_in_desc);
+
   
 }

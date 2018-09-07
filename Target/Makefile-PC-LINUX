@@ -79,6 +79,12 @@ communication_base2 :  src/app/test_communication_base2.cpp
 	${CXX} $(CXXFLAGS) -Isrc -Isrc/comm -Isrc/my_util -Isrc/my_util/utility -o build/test_communication_base2.o -c src/app/test_communication_base2.cpp
 	${CXX} $(CXXFLAGS) -Isrc  build/buffer_communication.o build/test_communication_base2.o -o build/test_communication_base2
 
+fd_base :  src/app/test_dev_fd.cpp 
+	${CXX} $(CXXFLAGS) -Isrc -Isrc/comm -Isrc/mcal/pc-linux/ -Isrc/my_util -Isrc/my_util/utility -o build/mcal.o -c src/mcal/mcal.cpp
+	${CXX} $(CXXFLAGS) -Isrc -Isrc/comm -Isrc/mcal/pc-linux/ -Isrc/my_util -Isrc/my_util/utility -o build/mcal_fd.o -c src/mcal/pc-linux/mcal_fd.cpp
+	${CXX} $(CXXFLAGS) -Isrc -Isrc/comm -Isrc/mcal/pc-linux/ -Isrc/my_util -Isrc/my_util/utility -o build/test_dev_fd.o -c src/app/test_dev_fd.cpp
+	${CXX} $(CXXFLAGS) -Isrc  build/mcal.o build/mcal_fd.o build/test_dev_fd.o -o build/test_dev_fd
+
 clean: 
 	rm -f $(LINK_TARGET) $(OBJECTS)
 	echo "Clean ... "

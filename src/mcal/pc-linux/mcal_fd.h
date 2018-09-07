@@ -9,12 +9,14 @@
 #include <cstdint>
 #include <iostream>
 
-#include <util/utility/util_communication.h>
+#include <util_communication.h>
 
 // File Includes
 #include <fstream>  // for file I/O
 #include <iomanip>  // for setw()
 #include <cstdlib>  //for exit()
+
+#include <string>
 
 #ifndef _MCAL_FD_LINUX_2018_
 #define _MCAL_FD_LINUX_2018_
@@ -24,17 +26,35 @@ namespace mcal
 namespace fd
 {
 
+typedef std::ofstream out_buffer_type;
+typedef std::ifstream in_buffer_type;
+//typedef std::iostream buffer_type;
+//typedef std::iostream buffer_type;
+/*
+struct file_dev
+{
+  std::string output_filename;
+  std::string  input_filename;
+
+  buffer_type send;
+  buffer_type recv;
+};
+*/
 typedef void config_type;
 
-void init(const config_type *);
+void init(config_type *);
 
 class file_descriptor_communication : public communication
 {
  public:
   //  typedef std::vector<std::uint8_t> buffer_type;
-  typedef std::iostream buffer_type;
+
+  //  typedef std::ios::pos_type ReadIter;
+  //  typedef std::ios::pos_type WriteIter;
+
         
-  file_descriptor_communication() : send_is_active(false) {}
+  //file_descriptor_communication() : send_is_active(false) {}
+  file_descriptor_communication(out_buffer_type &os, in_buffer_type &is) : send_buffer(os), recv_buffer(is), send_is_active(false) {}
 
   virtual bool send(const std::uint8_t byte_to_send);
   //template<typename send_iterator_type>
@@ -47,11 +67,15 @@ class file_descriptor_communication : public communication
 
  private:
   volatile bool send_is_active;
-  buffer_type send_buffer;
-  buffer_type recv_buffer;
+  out_buffer_type &send_buffer;
+  in_buffer_type &recv_buffer;
+  
+
 };
-      
-extern file_descriptor_communication my_fd_comm;
+
+//extern config_type file_dev_params;      
+//extern file_descriptor_communication my_fd_comm;
+
 }
 }
 
