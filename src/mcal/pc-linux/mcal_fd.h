@@ -30,19 +30,20 @@ typedef std::ofstream out_buffer_type;
 typedef std::ifstream in_buffer_type;
 //typedef std::iostream buffer_type;
 //typedef std::iostream buffer_type;
-/*
+
 struct file_dev
 {
   std::string output_filename;
   std::string  input_filename;
 
-  buffer_type send;
-  buffer_type recv;
+  out_buffer_type send_byte_buffer;
+  in_buffer_type recv_byte_buffer;
 };
-*/
-typedef void config_type;
 
-void init(config_type *);
+//typedef void config_type;
+typedef struct file_dev config_type;
+
+void init(config_type *params);
 
 class file_descriptor_communication : public communication
 {
@@ -73,7 +74,7 @@ class file_descriptor_communication : public communication
 
 };
 
-//extern config_type file_dev_params;      
+extern config_type file_dev_params;      
 //extern file_descriptor_communication my_fd_comm;
 
 }

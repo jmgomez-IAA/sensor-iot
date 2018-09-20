@@ -19,31 +19,23 @@
 #include <string>
 
 #include <mcal/mcal.h>
-//#include <PipeMessage/PipeMessage.h>
 
-//buffer_communication my_buff_comm;
-//extern util::comm::buffer_communication util::comm::my_buff_comm;
 
 int main()
 {
 
-
-std::ofstream file_out_desc( "out_dev_fd.bin" , (std::ios::out | std::ios::app | std::ios::ate | std::ios::binary ));
-  if (! file_out_desc )
-  {
-    std::cerr << "Can't open the output file " << "out_dev_fd.bin"  << " " << std::endl;
-    exit(EXIT_FAILURE);
-  }
-
-std::ifstream file_in_desc ( "in_dev_fd.bin" , (std::ios::in | std::ios::app | std::ios::binary) );
-  if (! file_in_desc)
-  {
-    std::cerr << "Can't open the input file " << "out_dev_fd.bin"  << " " << std::endl;
-    exit(EXIT_FAILURE);
-  }  
+  mcal::init();
 
 
-  mcal::fd::file_descriptor_communication( file_out_desc, file_in_desc);
+  mcal::fd::file_descriptor_communication fd_dev( mcal::fd::file_dev_params.send_byte_buffer,  mcal::fd::file_dev_params.recv_byte_buffer);
+  std::uint8_t byte_to_tx;
+  byte_to_tx = 65;
+  fd_dev.send(byte_to_tx);
 
-  
+
+  std::uint8_t byte_to_rx;
+  fd_dev.recv( byte_to_rx );
+  std::cout << "Se recibio el byte: " << unsigned(byte_to_rx) << "." << std::endl;
+
+  exit(0);
 }
