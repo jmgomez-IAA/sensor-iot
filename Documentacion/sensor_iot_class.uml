@@ -1,0 +1,36 @@
+@startuml
+interface task
+interface Communication_base
+interface Message_base
+
+scheduler -- task
+task <|-- TimeCritical_task
+task <|-- ProcessMessage_task
+
+Communication_base -- Message_base
+
+Communication_base  <|--  Communication 
+Message_base  <|--  Message_ModBus
+Handler -- Message_base
+TimeCritical_task -- Communication
+ProcessMessage_task -- Message_base
+
+
+Communication_base : send()
+Communication_base : sendn()
+Communication_base : recv()
+Communication_base : recvn()
+Communication_base : Idle()
+
+Message_base : send()
+Message_base : recv()
+Message_base : Serialize()
+Message_ModBus : Dispatch()
+
+Communication : Array[] elementData
+Communication : Init()
+
+scheduler : shedule()
+task : exec()
+task : getHK_Data()
+@enduml

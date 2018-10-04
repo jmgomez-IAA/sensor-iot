@@ -1,0 +1,75 @@
+# Set some paths for the tools.
+
+SRC_DIR = src
+OUTPUT_DIR = build
+TOOL_PATH = 
+FLASH_PATH = 
+
+# We are compiling for PC-LINUNX
+ARCH = 
+
+# Compiler
+CROSS_COMPILE = 
+CXX = ${TOOL_PATH}${CROSS_COMPILE}g++
+LD = ${TOOL_PATH}${CROSS_COMPILE}g++
+OBJDUMP = ${TOOL_PATH}${CROSS_COMPILE}objdump 
+SIZE = ${TOOL_PATH}${CROSS_COMPILE}size
+OBJCOPY = ${TOOL_PATH}${CROSS_COMPILE}objcopy
+FLASH = 
+
+# Compiler flags
+INCLUDES = src/
+LIBS = src/
+CPPFLAGS =  -g -O2 -Wall -Wextra -pedantic -fsigned-char -fno-exceptions
+CXXFLAGS = -std=c++11
+CINCLUDES = -Isrc -Isrc/mcal/pc-linux/ -Isrc/util/utility -Isrc/util/STL
+LDFLAGS = 
+
+
+
+# Here is a simple Make Macro.
+LINK_TARGET =
+HEX = 
+BIN = 
+
+# Here is a Make Macro that uses the backslash to extend to multiple lines.
+SOURCES = src/mcal/mcal.cpp src/mcal/pc-linux/mcal_pipe.cpp src/sys/app/pipe_linux_framework.cpp
+OBJECTS = $(OUTPUT_DIR)/mcal.o $(OUTPUT_DIR)/mcal_pipe.o $(OUTPUT_DIR)/pipe_linux_framework.o
+
+.PHONY = all
+
+all: $(OUTPUT_DIR)/pipe_linux_framework
+	echo "All done..."
+
+$(OUTPUT_DIR)/mcal_pipe.o :  src/mcal/pc-linux/mcal_pipe.cpp
+	echo "Compile the Pipe Based communication Class: mcal_pipe.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
+
+$(OUTPUT_DIR)/mcal.o :  src/mcal/mcal.cpp
+	echo "Compile the Mcal Top mcal.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
+
+
+$(OUTPUT_DIR)/pipe_linux_framework.o :  src/sys/app/pipe_linux_framework.cpp
+	echo "Compile the Pipe Based Framework: pipe_linux_framework.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
+
+
+$(OUTPUT_DIR)/pipe_linux_framework : $(OBJECTS)
+	echo "Link sources..."
+	${LD} -g $^ -o $@
+	${SIZE} $@
+	${OBJDUMP} -D -S $@ > $@.list
+
+$(OUTPUT_DIR)/test_circular_buffer.o :  src/app/test_circular_buffer.cpp
+	echo "Compile the Pipe Based Framework: pipe_linux_framework.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) -o $@ -c $^
+
+$(OUTPUT_DIR)/test_stl_vector.elf :  src/app/test_stl_vector.cpp
+	${CXX} $(CXXFLAGS) -Isrc -o build/test_stl_vector.o -c src/app/test_stl_vector.cpp
+	${CXX} $(CXXFLAGS) -Isrc  build/test_stl_vector.o -o build/test_stl_vector
+
+
+clean: 
+	rm -f $(LINK_TARGET) $(OBJECTS)
+	echo "Clean ... "

@@ -12,6 +12,7 @@
 # Compiled Object files
 *.o
 *.obj
+*.map 
 
 # Source Extra Files
 *.list

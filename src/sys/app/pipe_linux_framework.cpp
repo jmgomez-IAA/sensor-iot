@@ -4,59 +4,23 @@
  * @copyrigth 
  */
 
-
-#include <sys/wait.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
 #include <string>
 #include <iostream>
-using namespace std;
+
+#include <mcal/mcal.h>
+
 
 int main(int argc, char *argv[])
 {
-  int pipefd[2];
-  pid_t cpid;
-  char read_buf[80];
 
-  if (argc != 2) {
-    cerr << "Usage: %s <strig>\n" << argv[0];
+  std::uint32_t byte_to_send = 0, byte_to_recv = 0;
+  for(int i = 0; i< 10; i ++)
+  {
+    mcal::pipe_comm::the_pipe.send( byte_to_send );
 
-    exit(EXIT_FAILURE);
+    mcal::pipe_comm::the_pipe_recv( byte_to_recv );
+
+    std::cout << "Send the value : " << byte_to_send << " and received: " << byte_to_recv << std::endl;
   }
 
-  if (pipe(pipefd) == -1) {
-    cerr << "Error opening pipe" << endl;
-    exit(EXIT_FAILURE);
-  }
-
-  //Create two process
-  cpid = fork();
-  if (cpid == -1) {
-    cerr << "fork Error creating child process" << endl;
-    exit(EXIT_FAILURE);
-  }
-
-  if (cpid == 0) {    /* Child reads from pipe */
-    close(pipefd[1]);          /* Close unused write end */
-
-    while (read(pipefd[0], read_buf, 1) > 0)
-      write(STDOUT_FILENO, read_buf, 1);
-
-    write(STDOUT_FILENO, "\n", 1);
-    close(pipefd[0]);
-    exit(EXIT_SUCCESS);
-
-  } else {            /* Parent writes argv[1] to pipe */
-    close(pipefd[0]);          /* Close unused read end */
-
-    string txString (argv[1]); 
-    int nbytes = txString.length();
-    write(pipefd[1], txString.c_str(), nbytes);
-
-    close(pipefd[1]);          /* Reader will see EOF */
-    wait(NULL);                /* Wait for child */
-    exit(EXIT_SUCCESS);
-  }
 }
