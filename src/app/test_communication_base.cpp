@@ -1,5 +1,5 @@
 /**
- * @breif test STL circular buffer.
+ * @breif test STL Comm Mesage Base buffer.
  * @author Juan Manuel Gomez <greenlean@protonmail.com>
  * @copyrigth 
  * How-to build:
@@ -11,30 +11,14 @@
 
 
 #include <iostream>
+#include <vector>
 
+#include <buffer_communication.h>
 
-typedef std::vector<std::uint8_t> buffer_type;
+//#include <PipeMessage/PipeMessage.h>
 
-constexpr uint32_t buffer_size = 32;
-
-template<const std::size_t buffer_size = 16U>
-class communication_interface : public util:communication_base
-{
- public:
-  typedef std::vector<std::uint8_t> buffer_type;
-  
-  virtual ~communication_interface();
-
- protected:
-  communication_interface() : send_buffer(),
-                    recv_buffer() { }
-
-  buffer_type send_buffer;
-  buffer_type recv_buffer;
-
-};
-
-
+//buffer_communication my_buff_comm;
+//extern util::comm::buffer_communication util::comm::my_buff_comm;
 
 int main()
 {
@@ -43,24 +27,28 @@ int main()
   for(int i = 0; i< 10; i ++)
   {
     byte_to_send = static_cast<uint8_t>(i);
-    send_buffer.push_back(byte_to_send);
-    std::cout << "Add value: " << static_cast<unsigned>(byte_to_send) << " to circular buffer." << std::endl;
+
+    util::comm::my_buff_comm.send(byte_to_send);
+    std::cout << "Add value: " << static_cast<unsigned>(byte_to_send) << " to transmit." << std::endl;
   }
 
-  if ( send_buffer.empty() )
-  {
+  util::comm::my_buff_comm.simulate_recv();
 
-    std::cout << "Send buffer is empty." << std::endl;
-  }
-  else
+  std::size_t received_elements = 0;
+  while ( (received_elements = util::comm::my_buff_comm.recv_ready()) != 0 )
   {
-    recv_buffer = send_buffer;
+    
+    std::cout << "There are " << received_elements << " received." << std::endl;
 
-    for(auto it = recv_buffer.begin(); it != recv_buffer.end(); ++it) 
+    if (util::comm::my_buff_comm.recv(byte_to_recv) )
     {
-      byte_to_recv = *it;
       std::cout << "Extract value: " << static_cast<unsigned>(byte_to_recv) << " from circular buffer." << std::endl;
     }
+    else
+    {
+      std::cout << "Error." << std::endl;
+    }
   }
+  std::cout << "Send buffer is empty." << std::endl;
   
 }

@@ -14,10 +14,12 @@
 //#include <mcal_irq.h>
 //#include <mcal_led.h>
 
-#include <mcal_pipe.h>
+#include <mcal_fd.h>
+
 namespace mcal
 {
-  void init();
+void init();
+
 }
 
 #endif //_MCAL_EMBEDDED_2018_
