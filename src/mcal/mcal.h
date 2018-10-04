@@ -10,16 +10,18 @@
 #ifndef _MCAL_EMBEDDED_2018_
 #define _MCAL_EMBEDDED_2018_
 
-//#include <mcal_cpu.h>
-//#include <mcal_irq.h>
+#include <mcal_cpu.h>
+#include <mcal_wdt.h>
+#include <mcal_gpt.h>
+#include <mcal_irq.h>
 //#include <mcal_led.h>
-
-#include <mcal_fd.h>
+#include <mcal_port.h>
+#include <mcal_uart.h>
+#include <mcal_i2c.h>
 
 namespace mcal
 {
-void init();
-
+  void init();
 }
 
 #endif //_MCAL_EMBEDDED_2018_

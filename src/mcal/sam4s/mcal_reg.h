@@ -43,30 +43,78 @@
 
       // Nested Vector Interrupt Controller
       constexpr std::uint32_t nvic_base       = scs_base        + UINT32_C(0x00000100);
+      constexpr std::uint32_t nvic_iser0      = scs_base        + UINT32_C(0x00000100);
+      constexpr std::uint32_t nvic_iser1      = scs_base        + UINT32_C(0x00000104);
+      constexpr std::uint32_t nvic_icer0      = scs_base        + UINT32_C(0x00000180);
+      constexpr std::uint32_t nvic_icer1      = scs_base        + UINT32_C(0x00000184);
+      constexpr std::uint32_t nvic_ispr0      = scs_base        + UINT32_C(0x00000200);
+      constexpr std::uint32_t nvic_ispr1      = scs_base        + UINT32_C(0x00000204);
+      constexpr std::uint32_t nvic_icpr0      = scs_base        + UINT32_C(0x00000280);
+      constexpr std::uint32_t nvic_icpr1      = scs_base        + UINT32_C(0x00000284);
+      constexpr std::uint32_t nvic_iabr0      = scs_base        + UINT32_C(0x00000300);
+      constexpr std::uint32_t nvic_iabr1      = scs_base        + UINT32_C(0x00000304);
+      constexpr std::uint32_t nvic_ipr0       = scs_base        + UINT32_C(0x00000400);
+      constexpr std::uint32_t nvic_ipr1       = scs_base        + UINT32_C(0x00000404);
+
+      constexpr std::uint32_t nvic_stir       = scs_base        + UINT32_C(0x00000F00);
+
+
       constexpr std::uint32_t nvic2_base      = scs_base        + UINT32_C(0x00000F00);
+      //Sys Timer.
+      constexpr std::uint32_t syst_csr        = scs_base        + UINT32_C(0x00000010);
+      constexpr std::uint32_t syst_rvr        = scs_base        + UINT32_C(0x00000014);
+      constexpr std::uint32_t syst_cvr        = scs_base        + UINT32_C(0x00000018);
+      constexpr std::uint32_t syst_calib      = scs_base        + UINT32_C(0x0000001C);
 
       // Power Management Controller
       constexpr std::uint32_t pmc_base        = periph_base     + UINT32_C(0x000E0400);
+      //Peripheral clock register enable 0.
+      constexpr std::uint32_t pmc_pcer0       = periph_base     + UINT32_C(0x000E0410);
 
       constexpr std::uint32_t rcc_base        = ahb1periph_base + UINT32_C(0x00003800);
       constexpr std::uint32_t pwr_base        = apb1periph_base + UINT32_C(0x00007000);
 
       // Watchdog Control(* reg_wdt_mr) |=  WDT_WDDIS;
       constexpr std::uint32_t wdt_base        = periph_base     + UINT32_C(0x000E1450);
+      constexpr std::uint32_t wdt_mr          = periph_base     + UINT32_C(0x000E1454);
 
       // Parallel Input/Output Controller
-      constexpr std::uint32_t pioa_base       = scs_base        + UINT32_C(0x0E00);
-      constexpr std::uint32_t piob_base       = scs_base        + UINT32_C(0x1000);
-      constexpr std::uint32_t pioc_base       = scs_base        + UINT32_C(0x2000);
+      constexpr std::uint32_t pioa_periph_id  = 11;
+      constexpr std::uint32_t pioa_base       = periph_base        + UINT32_C(0xE0E00);
+      constexpr std::uint32_t piob_periph_id  = 12;
+      constexpr std::uint32_t piob_base       = periph_base        + UINT32_C(0xE1000);
+      constexpr std::uint32_t pioc_periph_id  = 13;
+      constexpr std::uint32_t pioc_base       = periph_base        + UINT32_C(0xE1200);
+
+
+      constexpr std::uint32_t piob_per        = piob_base       + UINT32_C(0x00);
+      constexpr std::uint32_t piob_pdr        = piob_base       + UINT32_C(0x04);
+      constexpr std::uint32_t piob_psr        = piob_base       + UINT32_C(0x08);
+      constexpr std::uint32_t piob_abcdsr1    = piob_base       + UINT32_C(0x70);
+      constexpr std::uint32_t piob_abcdsr2    = piob_base       + UINT32_C(0x74);
+
+      constexpr std::uint32_t pioc_per        = periph_base     + UINT32_C(0x000E1200);
+      constexpr std::uint32_t pioc_oer        = periph_base     + UINT32_C(0x000E1210);
+      constexpr std::uint32_t pioc_codr       = periph_base     + UINT32_C(0x000E1234);
+      constexpr std::uint32_t pioc_sodr       = periph_base     + UINT32_C(0x000E1230);
+      constexpr std::uint32_t pioc_odsr       = periph_base     + UINT32_C(0x000E1238);
+      constexpr std::uint32_t pioc_pdsr       = periph_base     + UINT32_C(0x000E123C);
+
+      // UART Peripheral Controller
+      constexpr std::uint32_t uart0_base      = periph_base     + UINT32_C(0x000E0600);
+      constexpr std::uint32_t uart1_base      = periph_base     + UINT32_C(0x000E0800);
+
+
+      // TWI Peripheral Controller
+      constexpr std::uint32_t twi0_base      = periph_base     + UINT32_C(0x00018000);
+      constexpr std::uint32_t twi1_base      = periph_base     + UINT32_C(0x0001C000);
+
+      // ADC Peripheral Controller
+      constexpr std::uint32_t adc_base       = periph_base     + UINT32_C(0x00038000);
 
       constexpr std::uint32_t flash_r_base    = ahb1periph_base + UINT32_C(0x00003C00);
 
       // Peripheral Memory Map Registers
-      //Sys Timer.
-      constexpr std::uint32_t syst_csr   = 0xE000E010U;
-      constexpr std::uint32_t syst_rvr   = 0xE000E014U;
-      constexpr std::uint32_t syst_cvr   = 0xE000E018U;
-      constexpr std::uint32_t syst_calib = 0xE000E01CU;
 
       // Port Registers
       constexpr std::uint32_t gpio_base = 0x0;

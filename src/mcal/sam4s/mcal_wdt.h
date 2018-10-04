@@ -1,5 +1,5 @@
 /**
- * @file mcal_wdg.h
+ * @file mcal_wdt.h
  * @brief Microcontroller abstraction layer for SAM4S ARM Cortex M CPU
  * @description Inicialization and definitions for the Watchdog CPU ARM Cortex M4
  * abstraction layer for the microcontroller SAM4S.
@@ -8,23 +8,22 @@
  */
 
 
-#ifndef _MCAL_WDG_SAM4S_EMBEDDED_2018_
-#define _MCAL_WDG_SAM4S_EMBEDDED_2018_
+#ifndef _MCAL_WDT_SAM4S_EMBEDDED_2018_
+#define _MCAL_WDT_SAM4S_EMBEDDED_2018_
 
+#include <mcal_reg.h>
 
 namespace mcal
 {
-  namespace wdg
+  namespace wdt
   {
     typedef void config_type;
     void init(const config_type*);
     void enable(const config_type*);
-    void disable(const config_type*)
-    {
-      // Disable the Watchdog
-      (* reg_wdt_mr) |=  WDT_WDDIS;
-    };
+
+    void disable();
+
   }
 }
 
-#endif  //_MCAL_WDG_SAM4S_EMBEDDED_2018
+#endif  //_MCAL_WDT_SAM4S_EMBEDDED_2018

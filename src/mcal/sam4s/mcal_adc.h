@@ -1,15 +1,15 @@
 /**
- * @file mcal_uart.h
- * @brief Microcontroller abstraction layer for the LED on PC4 SAM4S.
- * @description Inicialization and definitions for the LED on PC4 pin
+ * @file mcal_adc.h
+ * @brief Microcontroller abstraction layer for the ADC on PC4 SAM4S.
+ * @description Inicialization and definitions for the ADC on ___  pin
  * of the SAM4S board.
- * @note embedntks.com/sam4s-uart-and-usart/
+ * @note The ADC are all inputs, no periphreal is need??
  * @author Juan Manuel Gomez Lopez <jmgomez@iaa.es>
  * @copyright 
  */
 
-#ifndef _MCAL_UART_SAM4S_EMBEDDED_2018_
-#define _MCAL_UART_SAM4S_EMBEDDED_2018_
+#ifndef _MCAL_ADC_SAM4S_EMBEDDED_2018_
+#define _MCAL_ADC_SAM4S_EMBEDDED_2018_
 
 
 #include <cstdint>
@@ -22,7 +22,7 @@
 
 namespace mcal
 {
-  namespace uart
+  namespace adc
   {
     typedef void config_type;
 
@@ -33,13 +33,14 @@ namespace mcal
     template <typename port_type,// std::uint32_t
               typename bval_type,// std::uint8_t
               port_type port>
-    class uart_communication
+
+    class adc_device
     {
     public:
       typedef std::uint32_t addr_type;
       typedef std::uint32_t reg_type;
 
-      uart_communication() : send_is_active(false)
+      adc_device() : send_is_active(false)
       {
         // Enable Rx and Tx
         mcal::reg::access<addr_type,
@@ -67,7 +68,7 @@ namespace mcal
                           static_cast<std::uint32_t>(UINT32_C(0x00000000))>::reg_set();
       }
 
-      bool send(const bval_type byte_to_send)
+      bool read(const bval_type byte_to_send)
       {
 
         if ( send_is_active )
@@ -83,35 +84,7 @@ namespace mcal
         return true;
       }
 
-      template<typename send_iterator_type>
-      bool send_n(send_iterator_type first,
-                  send_iterator_type last)
-      {
-        bool send_result = true;
-
-        while(first != last)
-          {
-            typedef typename
-              std::iterator_traits<send_iterator_type>::value_type
-              send_value_type;
-
-            const send_value_type value(*first);
-
-            send_result &= send(std::uint8_t(value));
-
-            for (int i=0; i < 1000; ++i)
-              for (int j=0; j< 100; ++j)
-              {
-                mcal::cpu::nop();
-              }
-
-            ++first;
-          }
-
-        return send_result;
-      }
-
-      bool recv(bval_type &byte_to_recv)
+      bool start(bval_type &byte_to_recv)
       {
         byte_to_recv = mcal::reg::access<addr_type,
                           reg_type,
@@ -121,38 +94,52 @@ namespace mcal
       }
 
       //Checks if there is data to receive.
-      bool receive_ready()
+      bool conversion_ready()
       {
-        reg_type uart_status = mcal::reg::access<addr_type,
+        reg_type channel_status = mcal::reg::access<addr_type,
                                          reg_type,
-                                         uart_status_register>::reg_get();
-        return (uart_status & (0x1 << 0));
+                                         channel_status_register>::reg_get();
+        return (channel_status & (0x1 << 0));
       }
 
   private:
       volatile bool send_is_active;
 
-      static constexpr addr_type uart_ctrl_register         = addr_type(port + 0x00UL);
-      static constexpr addr_type uart_mode_register         = addr_type(port + 0x04UL);
-      static constexpr addr_type uart_status_register       = addr_type(port + 0x14UL);
-      static constexpr addr_type baud_rate_gen_register     = addr_type(port + 0x20UL);
+      static constexpr addr_type adc_ctrl_register         = addr_type(port + 0x00UL);
+      static constexpr addr_type adc_mode_register         = addr_type(port + 0x04UL);
 
-      static constexpr addr_type interrupt_enable_register  = addr_type(port + 0x08UL);
-      static constexpr addr_type interrupt_disable_register = addr_type(port + 0x0CUL);
-      static constexpr addr_type interrupt_mask_register    = addr_type(port + 0x10UL);
+      static constexpr addr_type channel_enable_register   = addr_type(port + 0x10UL);
+      static constexpr addr_type channel_enable_register   = addr_type(port + 0x14UL);
+      static constexpr addr_type channel_status_register   = addr_type(port + 0x18UL);
 
-      static constexpr addr_type output_data_register       = addr_type(port + 0x1CUL);
-      static constexpr addr_type input_data_register        = addr_type(port + 0x18UL);
+
+      //      static constexpr addr_type baud_rate_gen_register     = addr_type(port + 0x20UL);
+
+      static constexpr addr_type interrupt_enable_register  = addr_type(port + 0x24UL);
+      static constexpr addr_type interrupt_disable_register = addr_type(port + 0x28UL);
+      static constexpr addr_type interrupt_mask_register    = addr_type(port + 0x2CUL);
+      static constexpr addr_type interrupt_status_register  = addr_type(port + 0x30UL);
+
+      // Last converted data register
+      static constexpr addr_type output_data_register       = addr_type(port + 0x20UL);
+
+      // Specific channel data register.
+      static constexpr addr_type ad0_data_register          = addr_type(port + 0x50UL);
+      static constexpr addr_type ad1_data_register          = addr_type(port + 0x54UL);
+      static constexpr addr_type ad2_data_register          = addr_type(port + 0x58UL);
+
+      static constexpr addr_type ad15_data_register         = addr_type(port + 0x8CUL);
+
 
       //      friend void __vector_uart1_rx_tx_irq();
 
   };
 
-    extern uart_communication<std::uint32_t,
-                              std::uint8_t,
-                              mcal::reg::uart1_base> the_uart;
+    extern adc_peripheral<std::uint32_t,
+                          std::uint8_t,
+                          mcal::reg::adc_base> the_adc;
 }
 
 }
 
-#endif  //_MCAL_UART_SAM4S_EMBEDDED_2018
+#endif  //_MCAL_ADC_SAM4S_EMBEDDED_2018

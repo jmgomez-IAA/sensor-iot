@@ -21,6 +21,7 @@ namespace mcal
   {
 
     typedef void config_type;
+    typedef std::uint32_t IRQn_t;
 
     /**
      *
@@ -30,13 +31,26 @@ namespace mcal
     /**
      * @ brief Enable the interrupts.
      **/
-    void enable(const config_type*);
+    inline void  enable_all() { asm volatile("cpsie i"); }
 
     /**
      * @brief Disable the interrupts
      **/
-    void disable(const config_type*);
+    inline void disable_all() { asm volatile("cpsid i");}
 
+    /**
+     * @brief Enables the interruption for the peripheral id.
+     * @param IRQn Id of the interrupt, ussaly it is the peripheral
+     * id from table 11.1
+     */
+    void enableIRQ(IRQn_t IRQn);
+
+    /**
+     * @brief Enables the interruption for the peripheral id.
+     * @param IRQn Id of the interrupt, ussaly it is the peripheral
+     * id from table 11.1
+     */
+    void disableIRQ(IRQn_t IRQn);
   }
 }
 

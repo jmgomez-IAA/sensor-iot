@@ -1,0 +1,102 @@
+# Set some paths for the tools.
+
+SRC_DIR = src/
+#TOOL_PATH = /opt/gnu-mcu-eclipse/arm-none-eabi-gcc/7.2.1-1.1-20180401-0515/bin/
+TOOL_PATH = /opt/gcc-arm-none-eabi-7-2018-q2-update/bin/
+FLASH_PATH = /opt/edbg
+
+# We are compiling for SAM4S CortexM4
+ARCH = cortex-m4
+
+# Compiler
+CROSS_COMPILE = arm-none-eabi-
+CXX = ${TOOL_PATH}/${CROSS_COMPILE}g++
+LD = ${TOOL_PATH}/${CROSS_COMPILE}g++
+OBJDUMP = ${TOOL_PATH}/${CROSS_COMPILE}objdump 
+SIZE = ${TOOL_PATH}/${CROSS_COMPILE}size
+OBJCOPY = ${TOOL_PATH}/${CROSS_COMPILE}objcopy
+FLASH = ${FLASH_PATH}/edbg
+
+# Compiler flags
+INCLUDES = src/
+LIBS = src/
+CPPFLAGS = -mcpu=${ARCH} -g -O2 -Wall -Wextra -pedantic -fsigned-char -fno-exceptions
+CXXFLAGS = -std=c++11
+CINCLUDES = -Isrc -Isrc/mcal/sam4s -Isrc/sys/start/sam4s -Isrc/util/utility -Isrc/util/STL
+LDFLAGS =  -mthumb -Wl,-Map="yellow_led.map" -Wl,--start-group -lm  -Wl,--end-group -L"./src/sys/start/sam4s"  -Wl,--gc-sections  -Tatsam4sd32c.ld
+
+
+
+# Here is a simple Make Macro.
+LINK_TARGET = bin/blocking_delay_test.elf
+HEX =  bin/blocking_delay_test.elf.hex
+BIN =  bin/blocking_delay_test.elf.elf.bin
+
+# Here is a Make Macro that uses the backslash to extend to multiple lines.
+SOURCES = src/sys/start/sam4s/crt0.cpp src/sys/start/sam4s/crt0_init_ram.cpp src/sys/start/sam4s/crt1.cpp src/sys/start/sam4s/int_vect.cpp src/mcal/mcal.cpp src/mcal/sam4s/mcal_cpu.cpp  src/mcal/sam4s/mcal_irq.cpp src/mcal/sam4s/mcal_wdt.cpp src/mcal/sam4s/mcal_gpt.cpp src/sys/app/blocking_delay_test.elf.cpp
+OBJECTS = bin/crt0.o bin/crt0_init_ram.o bin/crt1.o bin/int_vect.o bin/mcal.o bin/mcal_cpu.o bin/mcal_irq.o bin/mcal_wdt.o bin/mcal_gpt.o  bin/blocking_delay_test.o
+
+.PHONY = all
+
+all: bin/blocking_delay_test.elf
+	echo "All done..."
+
+bin/blocking_delay_test.elf : $(OBJECTS)
+	echo "Link sources..."
+	${LD} -g $^ -o $@ $(LDFLAGS)
+	${SIZE} $@
+	${OBJDUMP} -D -S $@ > $@.list
+
+
+bin/crt0.o : src/sys/start/sam4s/crt0.cpp
+	echo "Compile the crt0.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o bin/crt0.o -c src/sys/start/sam4s/crt0.cpp
+
+bin/crt0_init_ram.o : src/sys/start/sam4s/crt0_init_ram.cpp
+	echo "Compile the crt0_init_ram.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o bin/crt0_init_ram.o -c src/sys/start/sam4s/crt0_init_ram.cpp
+
+bin/crt1.o : src/sys/start/sam4s/crt1.cpp
+	echo "Compile the crt1.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o bin/crt1.o -c src/sys/start/sam4s/crt1.cpp
+
+bin/int_vect.o : src/sys/start/sam4s/int_vect.cpp
+	echo "Compile the int_vect.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o bin/int_vect.o -c src/sys/start/sam4s/int_vect.cpp
+
+bin/mcal.o : src/mcal/mcal.cpp
+	echo "Compile the mcal.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o bin/mcal.o -c src/mcal/mcal.cpp
+
+bin/mcal_cpu.o : src/mcal/sam4s/mcal_cpu.cpp
+	echo "Compile the mcal_cpu.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
+
+bin/mcal_wdt.o : src/mcal/sam4s/mcal_wdt.cpp
+	echo "Compile the mcal_wdt.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
+
+bin/mcal_gpt.o : src/mcal/sam4s/mcal_gpt.cpp
+	echo "Compile the mcal_gpt.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
+
+bin/mcal_irq.o : src/mcal/sam4s/mcal_irq.cpp
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
+
+bin/blocking_delay_test.o :  src/sys/app/blocking_delay_test.cpp
+	echo "Compile the blocking_delay_test.cpp"
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
+
+$(HEX) : $(LINK_TARGET)
+	${OBJCOPY} -O ihex $^ $@.hex
+
+binary : $(LINK_TARGET)
+	${OBJCOPY} -O binary $^ $^.bin
+
+# Upload the program to the memory of the device..
+flash:
+	${FLASH} -bpv -t atmel_cm4 -f bin/blocking_delay_test.elf.bin
+
+clean: 
+	rm -f $(LINK_TARGET) $(OBJECTS) $(BIN) $(HEX) bin/*
+	echo "Clean ... "

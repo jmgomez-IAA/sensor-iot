@@ -1,36 +1,35 @@
 /**
- * @file mcal_uart.cpp
- * @brief Implementation of microcontroller abstraction layer for UART1 port of SAM4S.
- * @description Instantiates an UART object toma manage uart1.
+ * @file mcal_adc.cpp
+ * @brief Implementation of microcontroller abstraction layer for ADC port _ of SAM4S.
+ * @description Instantiates an ADC object toma manage adc.
  * on the board.
  * @author Juan Manuel Gomez Lopez <jmgomez@iaa.es>
  * @copyright
  */
 
-#include <mcal_uart.h>
+#include <mcal_adc.h>
 #include <mcal_cpu.h>
 #include <mcal_port.h>
 #include <mcal_reg_access.h>
 
 
-void mcal::uart::init(const config_type *)
+void mcal::adc::init(const config_type *)
 {
 
-  //Enable UART1
+  //Enable ADC Peripheral
   mcal::reg::access<std::uint32_t,
                     std::uint32_t,
                     mcal::reg::pmc_pcer0,
-                    static_cast<std::uint32_t>(UINT32_C(0x1 << 9))>::reg_or();
-
-
-  mcal::port::aurt1_tx_pin.periphA_manage_pin();
+                    static_cast<std::uint32_t>(UINT32_C(0x1 << 29))>::reg_or();
 
 }
 
+// This adc object should be for each pin? And The static for all?
+//The ADC1, is for pin 1, ADC2 for pin 2, etc.
+mcal::adc::adc_peripheral<std::uint32_t,
+                      std::uint8_t,
+                                 mcal::reg::adc_base> mcal::adc::the_adc;
 
-mcal::uart::uart_communication<std::uint32_t,
-                               std::uint8_t,
-                               mcal::reg::uart1_base> mcal::uart::the_uart;
 
 
 /*

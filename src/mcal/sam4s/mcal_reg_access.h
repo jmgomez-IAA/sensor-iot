@@ -12,6 +12,6 @@
 
   #include <mcal_reg.h>
   #include <mcal/mcal_reg_access_template.h>
-//  #include <mcal/mcal_reg_dynamic_access_template.h>
+  #include <mcal/mcal_reg_dynamic_access_template.h>
 
 #endif // _MCAL_ACCESS_SAM4S_EMBEDDED_2018_

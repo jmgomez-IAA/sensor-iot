@@ -8,15 +8,52 @@
  */
 
 #include <mcal_led.h>
-#include <mcal_reg_access.h>
 
+mcal::dev::led mcal::dev::led_yellow(mcal::reg::pioc_base, pioc_portpin_23);
 
-namespace mcal
+mcal::dev::led::led(std::uint32_t puerto, std::uint32_t valor)
 {
-  namespace led
+  port = puerto;
+  bval = valor;
+
+  //Writting 1 enables PIO to control this port pin.
+  *reinterpret_cast<unsigned int *>(mcal::reg::pioc_per) |= bval;
+  //Writting 1 set direction output.
+  *reinterpret_cast<unsigned int *>(mcal::reg::pioc_oer) |= bval ;
+
+  // Initilization to Low all pins??.
+  *reinterpret_cast<unsigned int *>(mcal::reg::pioc_codr) = bval ; // on;
+  led_is_on = true;
+}
+
+
+bool mcal::dev::led::switch_on(void)
+{
+  *reinterpret_cast<unsigned int *>(mcal::reg::pioc_codr) = bval ; // on;
+  led_is_on = true;
+  return led_is_on;
+}
+
+bool mcal::dev::led::switch_off(void)
+{
+  *reinterpret_cast<unsigned int *>(mcal::reg::pioc_sodr) = bval ; // on;
+  led_is_on = false;
+  return led_is_on;
+}
+
+void mcal::dev::led::toggle(void)
+{
+
+  //std::uint32_t led_port_pin_status = mcal::reg::access<std::uint32_t, std::uint32_t, mcal::reg::pioc_odsr>::reg_get();
+  //  if ((led_port_pin_status & bval) != 0)
+  if (led_is_on)
   {
-
-    const led led_yellow(mcal::reg::pioc_base, 0x800000U);
-
+    *reinterpret_cast<unsigned int *>(mcal::reg::pioc_sodr) = bval ; // off;
+    led_is_on = false;
   }
+  else
+    {
+      *reinterpret_cast<unsigned int *>(mcal::reg::pioc_codr) = bval ; // on;
+      led_is_on = true;
+    }
 }

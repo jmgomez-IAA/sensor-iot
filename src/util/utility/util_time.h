@@ -83,7 +83,7 @@
       {
         my_tick = my_now();
 
-        return my_tick;
+        //return my_tick;
       }
 
       static tick_type get_mark()

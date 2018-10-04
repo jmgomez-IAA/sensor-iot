@@ -11,20 +11,19 @@
 
 void mcal::init()
 {
-<<<<<<< HEAD
+
   mcal::cpu::init();
-=======
-  //  mcal::cpu::init(nullptr);
->>>>>>> f8a6d1132afef27090a9c144b5c0aebe805de5a1
-  //mcal::irq::init(nullptr);
+
+  mcal::wdt::disable();
+
+  //Required to use sys_tick_isr
+  mcal::irq::init(nullptr);
+
+  mcal::gpt::init(nullptr);
+  mcal::port::init(nullptr);
+  mcal::uart::init(nullptr);
+  mcal::i2c::init(nullptr);
+
+
   //mcal::led::init(nullptr);
-
-
-  mcal::fd::file_dev_params.output_filename = "out_file.bin";
-  mcal::fd::file_dev_params.input_filename = "in_file.bin";
-
-  //  file_dev_params.send_byte_buffer;
-  //file_dev_params.recv_byte_buffer;
-
-  mcal::fd::init( &mcal::fd::file_dev_params );
 }

@@ -11,6 +11,8 @@
 #define _MCAL_CPU_SAM4S_EMBEDDED_2018_
 
 #include <cstdint>
+#include <mcal_reg.h>
+
 
 namespace mcal
 {

@@ -13,7 +13,7 @@
 //#include <mcal_port.h>
 //#include <mcal_wdg.h>
 
-void mcal::pcm::init()
+void mcal::pmc::init()
 {
 
 
