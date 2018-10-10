@@ -20,7 +20,7 @@ extern "C" void __pend_sv_handler    () __attribute__((used, noinline));
 extern "C" void __sys_tick_handler   () __attribute__((used, noinline, weak));
 extern "C" void __vector_timer4      () __attribute__((used, noinline));
 extern "C" void __vector_uart1_rx_tx_handler() __attribute__((used, noinline));
-extern "C" void __vector_pio_a_handler() __attribute__((used, noinline));
+extern "C" void __vector_pio_a_handler() __attribute__((used, noinline, weak));
 
 // Unused irq simply halts.
 
@@ -35,7 +35,7 @@ extern "C" void __debug_mon_handler  () { for(;;) { mcal::cpu::nop(); } }
 extern "C" void __pend_sv_handler    () { for(;;) { mcal::cpu::nop(); } }
 extern "C" void __sys_tick_handler   () { for(;;) { mcal::cpu::nop(); } }
 extern "C" void __vector_uart1_rx_tx_handler () { for(;;) { mcal::cpu::nop(); } }
-//extern "C" void __vector_pio_a_handler () {  for (;;) {mcal::cpu::nop();}  }
+extern "C" void __vector_pio_a_handler () {  for (;;) {mcal::cpu::nop();}  }
 
 namespace
 {

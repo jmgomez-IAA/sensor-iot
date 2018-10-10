@@ -29,7 +29,9 @@
 
 # Compiled Dynamic libraries
 
-# Fortran module files
+# Build paths
+bin
+build
 
 # Compiled Static libraries
 .lib
