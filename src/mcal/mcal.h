@@ -16,8 +16,8 @@
 #include <mcal_irq.h>
 //#include <mcal_led.h>
 #include <mcal_port.h>
-#include <mcal_uart.h>
-#include <mcal_i2c.h>
+//#include <mcal_uart.h>
+//#include <mcal_i2c.h>
 
 namespace mcal
 {

@@ -38,54 +38,15 @@ int main()
   while (1)
     {
       //LWS OFF
-      mcal::port::yellow_led_pin.set_pin_high();
+      mcal::port::led1_pin.set_pin_high();
+      mcal::port::led2_pin.set_pin_low();
       timer_type::blocking_delay(timer_type::seconds(1U));
 
       // LED ON
-      mcal::port::yellow_led_pin.set_pin_low();
+      mcal::port::led1_pin.set_pin_low();
+      mcal::port::led2_pin.set_pin_high();
       timer_type::blocking_delay(timer_type::seconds(1U));
 
-      volatile std::uint32_t sw0_enable_status;
-      sw0_enable_status = mcal::reg::access< std::uint32_t,
-                                          std::uint32_t,
-                                          static_cast<std::uint32_t>(0x400E0E00)>::reg_get();
-
-      if ( sw0_enable_status & (0x1 << 2) )
-        mcal::uart::the_uart.send( 'E' );
-      else
-        mcal::uart::the_uart.send( 'D' );
-
-      timer_type::blocking_delay(timer_type::milliseconds(100U));
-
-      volatile std::uint32_t sw0_output_status;
-      sw0_output_status = mcal::reg::access< std::uint32_t,
-                                             std::uint32_t,
-                                             static_cast<std::uint32_t>(0x400E0E18)>::reg_get();
-
-      if ( sw0_output_status & (0x1 << 2) )
-        mcal::uart::the_uart.send( 'O' );
-      else
-        mcal::uart::the_uart.send( 'I' );
-
-      timer_type::blocking_delay(timer_type::milliseconds(100U));
-      volatile std::uint32_t pio_reg_status;
-      pio_reg_status = mcal::reg::access< std::uint32_t,
-                                          std::uint32_t,
-                                          static_cast<std::uint32_t>(0x400E0E3C)>::reg_get();
-
-
-      timer_type::blocking_delay(timer_type::milliseconds(100U));
-      if ( pio_reg_status & (0x1 << 2) )
-        mcal::uart::the_uart.send( '1' );
-      else
-        mcal::uart::the_uart.send( '0' );
-
-      while(! mcal::port::sw0_button_pin.read_input_value() )
-        {
-          mcal::cpu::nop();
-          timer_type::blocking_delay(timer_type::milliseconds(100U));
-          mcal::uart::the_uart.send( '0' );
-        }
     }
 
 

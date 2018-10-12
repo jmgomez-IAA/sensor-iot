@@ -133,6 +133,23 @@
                             static_cast<std::uint32_t>(UINT32_C(0x01) << (bpos))>::reg_or();
         }
 
+        static void enable_pull_down()
+        {
+          mcal::reg::access<addr_type,
+                            reg_type,
+                            pull_down_enable_register,
+                            static_cast<std::uint32_t>(UINT32_C(0x01) << (bpos))>::reg_or();
+        }
+
+        static void disable_pull_down()
+        {
+          mcal::reg::access<addr_type,
+                            reg_type,
+                            pull_down_disable_register,
+                            static_cast<std::uint32_t>(UINT32_C(0x01) << (bpos))>::reg_or();
+        }
+
+
         static void enable_pull_up()
         {
           mcal::reg::access<addr_type,
@@ -222,12 +239,14 @@
         static constexpr addr_type interrupt_disable_register   = addr_type(port + 0x44UL);
         static constexpr addr_type pull_up_disable_register     = addr_type(port + 0x60UL);
         static constexpr addr_type pull_up_enable_register      = addr_type(port + 0x64UL);
+        static constexpr addr_type pull_down_enable_register    = addr_type(port + 0x90UL);
+        static constexpr addr_type pull_down_disable_register  = addr_type(port + 0x94UL);
         static constexpr addr_type peripheral_select_register   = addr_type(port + 0x70UL);
         static constexpr addr_type output_write_disable         = addr_type(port + 0xA4UL);
 
       };
 
-
+      /*
       extern port_pin<std::uint32_t,
                       std::uint32_t,
                       mcal::reg::piob_base,
@@ -242,7 +261,7 @@
                       std::uint32_t,
                       mcal::reg::pioa_base,
                       UINT32_C(3) > twi0_data_pin;
-      /*
+      *//*
       extern port_pin<std::uint32_t,
                       std::uint32_t,
                       mcal::reg::piob_base,
@@ -254,16 +273,33 @@
                       UINT32_C(4) > twi1_data_pin;
       */
       // Switch Buttom on Pin PA02
+      /*
       extern port_pin<std::uint32_t,
                       std::uint32_t,
                       mcal::reg::pioa_base,
                       UINT32_C(2) > sw0_button_pin;
-
-      // Yellow Led on Pin PC24
+*/
+      // LED on port pin PIOA_14 LED1
       extern port_pin<std::uint32_t,
-                      std::uint32_t,
-                      mcal::reg::pioc_base,
-                      UINT32_C(23) > yellow_led_pin;
+                           std::uint32_t,
+                           mcal::reg::pioa_base,
+                           UINT32_C(14) > led1_pin;
+
+      // LED on port pin PIOA_15
+      extern port_pin<std::uint32_t,
+                           std::uint32_t,
+                           mcal::reg::pioa_base,
+                           UINT32_C(15) > led2_pin;
+
+      extern port_pin<std::uint32_t,
+                           std::uint32_t,
+                           mcal::reg::pioa_base,
+                           UINT32_C(26) > sw2_button_pin;
+
+      extern port_pin<std::uint32_t,
+                           std::uint32_t,
+                           mcal::reg::pioa_base,
+                           UINT32_C(13) > sw3_button_pin;
     }
   }
 

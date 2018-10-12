@@ -8,13 +8,32 @@
 #include <mcal_port.h>
 #include <mcal_reg_access.h>
 
-// Yellow LED on port pin PIOC_23
+// Yellow LED on port pin PIOA_14 LED1
 mcal::port::port_pin<std::uint32_t,
                      std::uint32_t,
-                     mcal::reg::pioc_base,
-                     UINT32_C(23) > mcal::port::yellow_led_pin;
+                     mcal::reg::pioa_base,
+                     UINT32_C(14) > mcal::port::led1_pin;
+
+// Yellow LED on port pin PIOA_15
+mcal::port::port_pin<std::uint32_t,
+                     std::uint32_t,
+                     mcal::reg::pioa_base,
+                     UINT32_C(15) > mcal::port::led2_pin;
+
+// Pull-down must be enabled
+mcal::port::port_pin<std::uint32_t,
+                     std::uint32_t,
+                     mcal::reg::pioa_base,
+                     UINT32_C(26) > mcal::port::sw2_button_pin;
+
+// Pull-down must be enabled
+mcal::port::port_pin<std::uint32_t,
+                     std::uint32_t,
+                     mcal::reg::pioa_base,
+                     UINT32_C(13) >  mcal::port::sw3_button_pin;
 
 
+/*
 mcal::port::port_pin<std::uint32_t,
                      std::uint32_t,
                      mcal::reg::pioa_base,
@@ -37,7 +56,7 @@ mcal::port::port_pin<std::uint32_t,
                      std::uint32_t,
                      mcal::reg::pioa_base,
                      UINT32_C(3) > mcal::port::twi0_data_pin;
-
+*/
 /*
 // TWI1 Data and CLK pins, which are connected to PIOB, should be multiplexed
 // in order to be managed with peripheral A.
@@ -73,16 +92,23 @@ void mcal::port::init(const config_type*)
                     static_cast<std::uint32_t>(UINT32_C(0x1 << 13))>::reg_or();
 
 
-  yellow_led_pin.set_direction_output();
+  led1_pin.set_direction_output();
+  led2_pin.set_direction_output();
 
-  sw0_button_pin.set_direction_input();
+  sw2_button_pin.set_direction_input();
+  sw2_button_pin.enable_pull_down();
+  sw3_button_pin.set_direction_input();
+
+  //  sw0_button_pin.set_direction_input();
 
   //Este clear deberia ir en el enable de la interrupcion, no aqui.
   //Clear interrupt pending status.
+  /*
   volatile std::uint32_t sw0_interrupt_status;
   sw0_interrupt_status = mcal::reg::access< std::uint32_t,
                                             std::uint32_t,
                                             static_cast<std::uint32_t>(0x400E0E4C)>::reg_get();
 
   sw0_button_pin.enable_interrupt_edge();
+  */
 }

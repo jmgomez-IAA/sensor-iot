@@ -19,8 +19,8 @@ extern "C" void __debug_mon_handler  () __attribute__((used, noinline));
 extern "C" void __pend_sv_handler    () __attribute__((used, noinline));
 extern "C" void __sys_tick_handler   () __attribute__((used, noinline, weak));
 extern "C" void __vector_timer4      () __attribute__((used, noinline));
-extern "C" void __vector_uart1_rx_tx_handler() __attribute__((used, noinline));
-extern "C" void __vector_pio_a_handler() __attribute__((used, noinline, weak));
+//extern "C" void __vector_uart1_rx_tx_handler() __attribute__((used, noinline));
+//extern "C" void __vector_pio_a_handler() __attribute__((used, noinline, weak));
 
 // Unused irq simply halts.
 
@@ -34,8 +34,8 @@ extern "C" void __svc_handler        () { for(;;) { mcal::cpu::nop(); } }
 extern "C" void __debug_mon_handler  () { for(;;) { mcal::cpu::nop(); } }
 extern "C" void __pend_sv_handler    () { for(;;) { mcal::cpu::nop(); } }
 extern "C" void __sys_tick_handler   () { for(;;) { mcal::cpu::nop(); } }
-extern "C" void __vector_uart1_rx_tx_handler () { for(;;) { mcal::cpu::nop(); } }
-extern "C" void __vector_pio_a_handler () {  for (;;) {mcal::cpu::nop();}  }
+//extern "C" void __vector_uart1_rx_tx_handler () { for(;;) { mcal::cpu::nop(); } }
+//extern "C" void __vector_pio_a_handler () {  for (;;) {mcal::cpu::nop();}  }
 
 namespace
 {
@@ -66,7 +66,7 @@ const volatile std::array<isr_type, number_of_interrupts> __isr_vector =
   __debug_mon_handler,       // 0x0030, 12, debug monitor
   __vector_unused_irq,       // 0x0034, 13, reserved
   __pend_sv_handler,         // 0x0038, 14, pending svc,
-  __sys_tick_handler,        // 0x003C, 15, system tick handler,
+  __sys_tick_handler,        // 0x003C, 15, system tick handler
   __vector_unused_irq,       // 0x0040, 16, wwdg irq handler, 0_supplyCtrl
   __vector_unused_irq,       // 0x0044, 17, pvd irq handler, 1_rstCtrl
   __vector_unused_irq,       // 0x0048, 18, tamper irq handler, 2 RTC
@@ -76,9 +76,9 @@ const volatile std::array<isr_type, number_of_interrupts> __isr_vector =
   __vector_unused_irq,       // 0x0058, 22, exti0 irq handler, 6 eefc0
   __vector_unused_irq,       // 0x005C, 23, exti1 irq handler, 7 eefc1
   __vector_unused_irq,       // 0x0060, 24, exti2 irq handler, uart0   <--
-  __vector_uart1_rx_tx_handler,   // 0x0064, 25,  exti3 irq handler, uart1
+  __vector_unused_irq,   // 0x0064, 25,  exti3 irq handler, uart1
   __vector_unused_irq,       // 0x0068, 26, exti4 irq handler,
-  __vector_pio_a_handler,       // 0x006C, 27, dma_channel1 irq handler, PIOA   <--
+  __vector_unused_irq,       // 0x006C, 27, dma_channel1 irq handler, PIOA   <--
   __vector_unused_irq,       // 0x0070, 28, dma_channel2 irq handler, PIOB
   __vector_unused_irq,       // 0x0074, 29, dma_channel3 irq handler, PIOC
   __vector_unused_irq,       // 0x0078, 30, dma_channel4 irq handler, USART0

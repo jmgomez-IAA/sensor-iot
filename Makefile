@@ -28,9 +28,11 @@ LIBS = src/
 CPPFLAGS = -mcpu=${ARCH} -g -O2 -Wall -Wextra -pedantic -fsigned-char -fno-exceptions
 CXXFLAGS = -std=c++11
 CINCLUDES = -Isrc -Isrc/mcal/sam4s -Isrc/util/STL -Isrc/sys/start/sam4s
-LDFLAGS =  -mthumb  -Wl,--start-group -lm  -Wl,--end-group -L"./src/sys/start/sam4s"  -Wl,--gc-sections  -Tatsam4sd32c.ld
+LDFLAGS =  -mthumb  -Wl,--start-group -lm  -Wl,--end-group -L"./src/sys/start/sam4s"  -Wl,--gc-sections  -Tatsam4s16c.ld
 
-SOURCES = src/sys/start/sam4s/crt0.cpp src/sys/start/sam4s/crt0_init_ram.cpp src/sys/start/sam4s/crt1.cpp src/sys/start/sam4s/int_vect.cpp src/mcal/mcal.cpp src/mcal/sam4s/mcal_cpu.cpp src/mcal/sam4s/mcal_irq.cpp src/mcal/sam4s/mcal_wdt.cpp src/mcal/sam4s/mcal_gpt.cpp src/mcal/sam4s/mcal_port.cpp src/mcal/sam4s/mcal_uart.cpp src/mcal/sam4s/mcal_i2c.cpp
+SOURCES = src/sys/start/sam4s/crt0.cpp src/sys/start/sam4s/crt0_init_ram.cpp src/sys/start/sam4s/crt1.cpp src/sys/start/sam4s/int_vect.cpp src/mcal/mcal.cpp src/mcal/sam4s/mcal_cpu.cpp src/mcal/sam4s/mcal_irq.cpp src/mcal/sam4s/mcal_wdt.cpp  src/mcal/sam4s/mcal_port.cpp src/mcal/sam4s/mcal_gpt.cpp
+
+#  src/mcal/sam4s/mcal_uart.cpp src/mcal/sam4s/mcal_i2c.cpp
 
 OBJECTS = $(addprefix $(BUILD_DIR),$(patsubst %.cpp,%.o,$(SOURCES)))
 
