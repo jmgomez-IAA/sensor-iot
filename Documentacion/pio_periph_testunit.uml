@@ -1,0 +1,57 @@
+@startuml
+title __Simple__ PIO Peripheral test\nwith LEDS and SW with interrupts.
+actor Engeenier as User
+boundary "UART Input\nactivity Selecion" as ActivityManager 
+control PIO_CTRL
+entity LED_D13
+entity LED_D14
+entity BUTTON_SW2
+entity BUTTON_SW3
+control TIMER
+
+User -> ActivityManager : PowerOn
+ActivityManager --> User : WelcomeMenu
+
+User -> ActivityManager: ExecuteTest(PIO_Periph_test)
+ActivityManager -> PIO_CTRL : Enable(LED_13)
+ActivityManager -> PIO_CTRL : Enable(LED_14)
+ActivityManager -> PIO_CTRL : Enable(Button_3)
+ActivityManager -> PIO_CTRL : Enable(Button_4)
+PIO_CTRL -> LED_D13 : set_direction_output
+PIO_CTRL -> LED_D14 : set_direction_output
+PIO_CTRL -> BUTTON_SW2 : set_direction_input
+PIO_CTRL -> BUTTON_SW2 : enable_pull_down
+PIO_CTRL -> BUTTON_SW2 : enable_interrupt_edge
+PIO_CTRL -> BUTTON_SW3 : set_direction_input
+PIO_CTRL -> BUTTON_SW3 : enable_pull_down
+
+loop 30 seconds
+
+     PIO_CTRL -> LED_D13 : set_pin_high
+     PIO_CTRL -> TIMER : blocking_delay(seconds::1)
+     PIO_CTRL -> LED_D13 : set_pin_low
+     PIO_CTRL -> TIMER : blocking_delay(seconds::1)
+
+     PIO_CTRL -> BUTTON_SW3 : read_input_value
+     BUTTON_SW3 --> PIO_CTRL : true
+
+     loop sw3 pressed = true
+         PIO_CTRL -> LED_D14 : set_pin_high    
+         PIO_CTRL -> TIMER : blocking_delay(seconds::1)
+         PIO_CTRL -> LED_D14 : set_pin_low
+         PIO_CTRL -> TIMER : blocking_delay(seconds::1)
+         PIO_CTRL -> BUTTON_SW3 : read_input_value
+         BUTTON_SW3 --> PIO_CTRL : true
+     end
+
+     BUTTON_SW2 -> PIO_CTRL : true
+     PIO_CTRL --> PIO_CTRL : Cunter+1
+
+     alt counter > 10
+         PIO_CTRL --> LED_D13 : set_pin_low
+         PIO_CTRL --> LED_D14 : set_pin_low
+         ActivityManager --> User : Test End
+     end
+
+end
+@enduml

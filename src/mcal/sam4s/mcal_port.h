@@ -9,7 +9,9 @@
 
   #include <mcal_reg_access.h>
 
-  namespace mcal
+  extern "C" void __vector_pio_a_handler() __attribute__((used, noinline));
+
+namespace mcal
   {
     namespace port
     {
@@ -42,38 +44,10 @@
                             std::uint32_t,
                             peripheral_select_register+0x4,
                             ~static_cast<std::uint32_t>(UINT32_C(0x01) << (bpos))>::reg_and();
-
-          /*
-          // Set for no pull up, no pull down.
-          mcal::reg::access<addr_type,
-                            reg_type,
-                            pull_up_pull_down_register,
-                            ~static_cast<std::uint32_t>(UINT32_C(0x03) << (bpos * 2U))>::reg_and();
-          */
         }
 
         static void set_direction_output()
         {
-          // Set the port pin control bits.
-
-          // Set for no pull up, no pull down.
-          /*         mcal::reg::access<addr_type,
-                            reg_type,
-                            pull_up_pull_down_register,
-                            ~static_cast<std::uint32_t>(UINT32_C(0x03) << (bpos * 2U))>::reg_and();
-
-          // Select the fastest output speed.
-          mcal::reg::access<addr_type,
-                            reg_type,
-                            output_speed_register,
-                            static_cast<std::uint32_t>(UINT32_C(0x03) << (bpos * 2U))>::reg_or();
-
-          // Set the port pin to push-pull output type.
-          mcal::reg::access<addr_type,
-                            reg_type,
-                            output_type_register,
-                            bpos>::bit_clr();
-          */
           // Set the port pin direction to digital output.
           mcal::reg::access<addr_type,
                             reg_type,
@@ -100,23 +74,12 @@
                             port_enable_register,
                             static_cast<std::uint32_t>(UINT32_C(0x01) << (bpos))>::reg_or();
 
-          // Set the port pin direction to digital input.
-          /*          mcal::reg::access<addr_type,
-                            reg_type,
-                            output_enable_register,
-                            ~static_cast<std::uint32_t>(UINT32_C(0x01) << (bpos))>::reg_and();*/
           // Disable Output
           mcal::reg::access<addr_type,
                             reg_type,
                             output_disable_register,
                             static_cast<std::uint32_t>(UINT32_C(0x01) << (bpos))>::reg_or();
 
-          // Disable Pull-up
-          /*          mcal::reg::access<addr_type,
-                            reg_type,
-                            pull_up_disable_register,
-                            static_cast<std::uint32_t>(UINT32_C(0x01) << (bpos))>::reg_or();
-          */
           mcal::reg::access<addr_type,
                             reg_type,
                             glicth_filter_disable,
@@ -126,6 +89,8 @@
                             reg_type,
                             clear_output_data,
                             static_cast<std::uint32_t>(UINT32_C(0x01) << (bpos))>::reg_or();
+
+          disable_pull_up();
 
           mcal::reg::access<addr_type,
                             reg_type,
@@ -178,12 +143,6 @@
                             reg_type,
                             interrupt_enable_register,
                             static_cast<std::uint32_t>(UINT32_C(0x01) << (bpos))>::reg_or();
-
-          // Set the port output value to high.
-          /*          mcal::reg::access<addr_type,
-                            reg_type,
-                            set_output_data,
-                            bpos>::bit_set();*/
         }
 
 
@@ -240,7 +199,7 @@
         static constexpr addr_type pull_up_disable_register     = addr_type(port + 0x60UL);
         static constexpr addr_type pull_up_enable_register      = addr_type(port + 0x64UL);
         static constexpr addr_type pull_down_enable_register    = addr_type(port + 0x90UL);
-        static constexpr addr_type pull_down_disable_register  = addr_type(port + 0x94UL);
+        static constexpr addr_type pull_down_disable_register   = addr_type(port + 0x94UL);
         static constexpr addr_type peripheral_select_register   = addr_type(port + 0x70UL);
         static constexpr addr_type output_write_disable         = addr_type(port + 0xA4UL);
 
@@ -279,13 +238,13 @@
                       mcal::reg::pioa_base,
                       UINT32_C(2) > sw0_button_pin;
 */
-      // LED on port pin PIOA_14 LED1
+      // LED on port pin PIOA_14 LED1 : D13
       extern port_pin<std::uint32_t,
                            std::uint32_t,
                            mcal::reg::pioa_base,
                            UINT32_C(14) > led1_pin;
 
-      // LED on port pin PIOA_15
+      // LED on port pin PIOA_15 : D14
       extern port_pin<std::uint32_t,
                            std::uint32_t,
                            mcal::reg::pioa_base,
@@ -294,12 +253,23 @@
       extern port_pin<std::uint32_t,
                            std::uint32_t,
                            mcal::reg::pioa_base,
-                           UINT32_C(26) > sw2_button_pin;
+                           UINT32_C(26) > sw3_button_pin;
 
       extern port_pin<std::uint32_t,
                            std::uint32_t,
                            mcal::reg::pioa_base,
-                           UINT32_C(13) > sw3_button_pin;
+                           UINT32_C(13) > sw2_button_pin;
+
+      extern port_pin<std::uint32_t, std::uint32_t, mcal::reg::pioa_base, UINT32_C(0)  >  addr0_pin;
+      extern port_pin<std::uint32_t, std::uint32_t, mcal::reg::pioa_base, UINT32_C(1)  >  addr1_pin;
+      extern port_pin<std::uint32_t, std::uint32_t, mcal::reg::pioa_base, UINT32_C(2)  >  addr2_pin;
+      extern port_pin<std::uint32_t, std::uint32_t, mcal::reg::pioa_base, UINT32_C(30) >  addr3_pin;
+      extern port_pin<std::uint32_t, std::uint32_t, mcal::reg::pioa_base, UINT32_C(28) >  addr4_pin;
+      extern port_pin<std::uint32_t, std::uint32_t, mcal::reg::pioa_base, UINT32_C(27) >  addr5_pin;
+      extern port_pin<std::uint32_t, std::uint32_t, mcal::reg::pioa_base, UINT32_C(11) >  addr6_pin;
+      extern port_pin<std::uint32_t, std::uint32_t, mcal::reg::pioa_base, UINT32_C(12) >  addr7_pin;
+
+      extern std::uint32_t counter;
     }
   }
 

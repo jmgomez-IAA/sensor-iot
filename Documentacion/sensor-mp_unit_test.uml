@@ -1,0 +1,24 @@
+@startuml
+top to bottom direction
+actor :Test Engineer: as User
+
+rectangle unit_test {
+          left to right direction
+          User --> (Start) : PowerOn
+          User --> (PIO Peripheral Test)
+          User --> (I2C Peripheral Test)
+          User --> (ADC Peripheral Test)
+          User --> (Modem Alive)
+          User --> (USART Peripheral Test)
+          User --> (485 Peripheral Test)
+}
+
+rectangle functional_test {
+          left to right direction
+          User --> ( Device Address) 
+          User --> ( Temperature and Humidity)
+          User --> ( Current)
+          User --> ( Comunicate Remote)
+          User --> ( Upload Telemetries)
+}
+@enduml
