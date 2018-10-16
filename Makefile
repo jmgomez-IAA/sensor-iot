@@ -40,7 +40,7 @@ PROGRAM = /src/sys/app/adc_periph_test.cpp /src/sys/app/sys_tick_chrono_test.cpp
 
 .PHONY = all
 
-all: yellow_led pio_periph sys_tick_chrono blocking_delay sys_interval i2c_periph uart_periph adc_periph modem_power
+all: yellow_led pio_periph sys_tick_chrono blocking_delay sys_interval i2c_periph uart_periph adc_periph eefc_periph modem_power
 	echo "All done..."
 	echo "sudo ${FLASH} -bpv -t atmel_cm4 -f bin/program_to_test.elf.bin"
 
@@ -71,6 +71,11 @@ pio_periph: $(BIN_DIR)pio_periph_test.elf
 
 modem_power: $(BIN_DIR)modem_power_test.elf
 	echo "Building BGS2 Modem Power Test Program."
+	${OBJCOPY} -O ihex $^ $^.hex
+	${OBJCOPY} -O binary $^ $^.bin
+
+eefc_periph:  $(BIN_DIR)eefc_periph_test.elf
+	echo "Building Flash Peripheral Test Program."
 	${OBJCOPY} -O ihex $^ $^.hex
 	${OBJCOPY} -O binary $^ $^.bin
 
@@ -169,6 +174,10 @@ $(BUILD_DIR)src/sys/app/uart_periph_test.o:  src/sys/app/uart_periph_test.cpp
 	mkdir -p $(@D)
 	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
 
+$(BUILD_DIR)src/sys/app/eefc_periph_test.o:  src/sys/app/eefc_periph_test.cpp
+	mkdir -p $(@D)
+	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
+
 $(BUILD_DIR)src/sys/app/sys_interval_test.o:  src/sys/app/sys_interval_test.cpp
 	mkdir -p $(@D)
 	${CXX} $(CXXFLAGS) $(CPPFLAGS) $(CINCLUDES) -o $@ -c $^
@@ -189,6 +198,13 @@ $(BIN_DIR)pio_periph_test.elf: $(OBJECTS) $(BUILD_DIR)src/sys/app/pio_periph_tes
 	${LD} -g $^ -o $@ -Wl,-Map="$(BUILD_DIR)src/sys/app/pio_periph_test.map" $(LDFLAGS)
 	${SIZE} $@
 	${OBJDUMP} -D -S $@ > $@.list
+
+$(BIN_DIR)eefc_periph_test.elf: $(OBJECTS) $(BUILD_DIR)src/sys/app/eefc_periph_test.o
+	mkdir -p $(@D)
+	${LD} -g $^ -o $@ -Wl,-Map="$(BUILD_DIR)src/sys/app/pio_periph_test.map" $(LDFLAGS)
+	${SIZE} $@
+	${OBJDUMP} -D -S $@ > $@.list
+
 
 $(BIN_DIR)adc_periph_test: $(OBJECTS) $(BUILD_DIR)src/sys/app/adc_periph_test.o
 	mkdir -p $(@D)

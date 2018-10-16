@@ -1,0 +1,37 @@
+@startuml
+actor "Test Engeenier" as User
+boundary "UART Input\nactivity Selecion" as ActivityManager 
+control PIO_CTRL
+entity LED_D13
+entity LED_D14
+'entity BUTTON_SW2
+'entity BUTTON_SW3
+'control TIMER
+control FLASH
+
+User -> ActivityManager : PowerOn
+ActivityManager --> User : WelcomeMenu
+User -> ActivityManager: ExecuteTest(EEFC_Periph_test)
+ActivityManager -> PIO_CTRL : Enable(LedD13)
+ActivityManager -> PIO_CTRL : Enable(LedD14)
+
+ActivityManager -> FLASH : getDesciptor
+PIO_CTRL -> LED_D14: set_low
+PIO_CTRL -> LED_D13: set_low
+
+ActivityManager -> FLASH : ReadValueFromFlash
+FLASH --> ActivityManager : value_read_from_flash
+
+alt value_read_from_flash is ok
+
+    PIO_CTRL -> LED_D13 : set_low
+
+else value
+
+     PIO_CTRL -> LED_D13 : set_high
+     ActivityManager -> FLASH : WriteValueToFLash
+
+end
+PIO_CTRL -> LED_D14: set_high
+User -> PIO_CTRL : Reset
+@enduml
